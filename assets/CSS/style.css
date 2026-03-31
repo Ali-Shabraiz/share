@@ -1,0 +1,490 @@
+nav {
+    width: 100%;
+    background-color: var(--wte);
+    padding: 15px 25px;
+    display: flex;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    justify-content: space-between;
+    z-index: 99;
+    height: var(--navHeight);
+}
+.displayNone{
+    display: none;
+}
+nav .logo {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+
+}
+
+nav .logo .icon {
+    width: 32px;
+    height: 32px;
+    background-color: var(--blk);
+    color: var(--wte);
+    text-align: center;
+    align-content: center;
+    border-radius: 10px;
+    font-weight: 800;
+    /* font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif */
+}
+
+nav .logo .name {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    height: 100%;
+    /* background: red; */
+    align-self: center;
+}
+
+nav .logo .title {
+    color: var(--blk);
+    font-size: 14px;
+    /* font-family: intel; */
+    font-weight: 900;
+    line-height: 15px;
+}
+
+nav .logo .subTitle {
+    font-size: 8px;
+    font-weight: 900;
+    line-height: 9px;
+    color: var(--primeryBlue);
+}
+
+nav .controls {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.cartBtn,
+.heartBtn,
+.menuIcon,
+.eyeBtn,
+.deleteBtn,
+nav .controls span {
+    font-size: 18px;
+    font-weight: 900;
+    line-height: 28px;
+    color: var(--clr);
+    height: 45px;
+    width: 45px;
+    background-color: var(--bgClr);
+    border-radius: 10px;
+    align-content: center;
+    text-align: center;
+    filter: grayscale(1);
+    transition: 0.2s;
+}
+
+.cartBtn:hover,
+.heartBtn:hover,
+.deleteBtn:hover,
+.eyeBtn:hover,
+.cartBtn.active,
+.heartBtn.active,
+.menuIcon:hover,
+nav .controls span:hover {
+    filter: grayscale(0);
+}
+
+nav .controls button {
+    background-color: var(--blk);
+    color: var(--wte);
+    padding: 0 20px;
+    height: 45px;
+    border: none;
+    font-size: 10px;
+    border-radius: 10px;
+    text-transform: uppercase;
+    font-weight: 900;
+    cursor: pointer;
+}
+nav .controls span .cartCount{
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    font-size: 10px;
+    padding-bottom: 3px;
+    background-color: var(--blk);
+    outline: 3px solid var(--wte);
+    border-radius: 50%;
+    color: var(--wte);
+    filter: grayscale(0);
+    width: 25px;
+    height: 25px;
+    text-align: center;
+    align-content: center;
+}
+nav .controls button.fa-user,
+nav .controls button.fa-sign-out
+
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    line-height: 14px;
+}
+
+nav .controls button.logOutBtn {
+    background-color: var(--heartRed) !important;
+    color: var(--wte) !important;
+}
+
+
+nav .searchBar {
+    display: flex;
+}
+
+nav .searchBar .icon {
+    height: 40px;
+    align-content: center;
+    text-align: center;
+    width: 40px;
+    background-color: var(--secondWte);
+    color: gray;
+    font-size: 13px;
+    border-radius: 10px 0 0 10px;
+}
+
+nav .searchBar input {
+    background-color: var(--secondWte);
+    border: none;
+    outline: none;
+    border-radius: 0px 10px 10px 0px;
+    /* width: 0px; */
+    /* width: 400px; */
+    color: black;
+}
+
+.loginBtn,
+nav .menuIcon {
+    display: none;
+}
+
+.menuBar {
+    display: flex;
+    gap: 20px;
+    list-style: none;
+}
+
+.menuBar li {
+    font-size: 11px;
+    text-transform: uppercase;
+    color: var(--grayText);
+    font-weight: 900;
+    position: relative;
+    text-align: center;
+    transition: 0.2s;
+    cursor: pointer;
+}
+
+.menuBar li .icon,
+.menuBar li .arrow {
+    display: none;
+}
+
+.menuBar li.active,
+.menuBar li:hover {
+    color: var(--primeryBlue);
+}
+
+.menuBar li::after {
+    transition: inherit;
+    position: absolute;
+    content: '';
+    width: 0;
+    bottom: -5px;
+    left: 0;
+    height: 3px;
+    background-color: var(--primeryBlue);
+}
+
+.menuBar li.active::after,
+.menuBar li:hover::after {
+    width: 100%;
+}
+
+.menuBar li .dropDown {
+    list-style: none;
+    position: absolute;
+    width: max-content;
+    padding: 15px 0;
+    background-color: var(--wte);
+    border: 1px solid var(--secondWte);
+    flex-direction: column;
+    gap: 5px;
+    top: 15px;
+    border-radius: 10px;
+    display: none;
+}
+
+.menuBar li:hover .dropDown {
+    display: flex;
+
+}
+
+.menuBar li .dropDown li {
+    padding: 10px 25px;
+    border-radius: 20px;
+    width: 100%;
+}
+
+.menuBar li .dropDown li::after {
+    display: none;
+}
+
+.menuBar li .dropDown li:hover {
+    background: var(--secondWte);
+}
+
+
+
+
+
+
+
+
+.logIn {
+    display: none;
+    flex-direction: column;
+    padding: 25px 15px;
+    align-items: center;
+    gap: 10px;
+    width: max-content;
+    border-radius: 20px;
+    border: 1px solid var(--secondWte);
+    position: fixed;
+    right: 10px;
+    top: calc(var(--navHeight) + 10px);
+    background-color: var(--wte);
+    box-shadow: 0 0 10px var(--blk);
+    z-index: 111;
+}
+
+.logIn .crossIcon {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+}
+
+.logIn.active {
+    display: flex;
+}
+
+.logIn .logo {
+    width: 50px;
+    height: 50px;
+    font-size: 1.5rem;
+    font-family: 900;
+    background-color: var(--blk);
+    color: var(--wte);
+    text-align: center;
+    align-content: center;
+    border-radius: 10px;
+}
+
+.logIn h2 {
+    font-size: 30px;
+    color: var(--blk);
+    line-height: 36px;
+}
+
+.logIn .text {
+    font-size: 14px;
+    line-height: 24px;
+    color: var(--grayText);
+}
+
+.logIn fieldset {
+    display: flex;
+    flex-direction: column;
+    border: none;
+    width: 100%;
+    gap: 5px;
+}
+
+.logIn fieldset label {
+    color: var(--grayText);
+    font-size: 12px;
+    line-height: 15px;
+    font-weight: 900;
+}
+
+.logIn fieldset input ,
+.socialAccountEdits input
+{
+    width: 100%;
+    padding: 13px 10px;
+    background-color: var(--secondWte);
+    border: none;
+    border-radius: 15px;
+}
+
+.logIn button ,
+.socialAccountEdits button
+{
+    border-radius: 15px;
+    background: var(--blk);
+    color: var(--wte);
+    padding: 13px 10px;
+    width: 100%;
+}
+
+
+ :root{
+            --asideWidth: 300px
+        }
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        nav{
+            background: var(--wte);
+
+        }
+        .main{
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            position: relative;
+        }
+        .content{
+            width: 100%;
+            background: var(--wte);
+            display: flex;
+            justify-content: space-between; 
+            
+        }
+        aside{
+            width: var(--asideWidth);
+            height: calc(100vh - var(--navHeight));
+            background: var(--wte);
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            justify-content: space-between;
+            top: var(--navHeight);
+            position: sticky;
+        }
+        .dangerButton{
+            background: var(--heartRed);
+            color: var(--wte);
+            padding: 7px 10px;
+            border: none;
+            font-size: 1em;
+            font-weight: 700;
+            border-radius: 20px;
+        }
+        aside ul{
+            display: flex;
+            flex-direction: column;
+            list-style: none;
+        }
+        aside ul li{
+            width: 100%;
+            /* background: red; */
+            height: 50px;
+            padding: 10px;
+            font-weight: 600;
+            align-content: center;
+            color: var(--blk);
+            border-radius: 10px;
+            
+        }
+        aside ul li:hover,aside ul li.active{
+            background : var(--secondWte);
+            color: var(--primeryBlue)
+        }
+        .content .info{
+            padding: 15px;
+            background: var(--secondWte);
+            width: calc(100% - var(--asideWidth));
+            border-radius: 20px;
+            gap: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+        .container{
+            background: var(--wte);
+            padding: 12.5px;
+            border-radius: 10px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+
+        }
+        .container.score,.container.socialAccounts{
+            flex-direction: row;
+            justify-content: space-between;
+        }
+        .container.socialAccounts .column{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+        .container.socialAccounts .fab{
+            width: 35px;
+            height: 35px;
+            align-content: center;
+            font-size: 1.2em;
+            text-align: center;
+            background-color: var(--secondWte);
+            border-radius: 50%;
+            background-color: var(--clr);
+            color: var(--wte);
+        }
+        .personalInfo{
+            height: 125px;
+            flex-wrap: wrap;
+            align-content: flex-start;
+            column-gap: 15px;
+            justify-content: center;
+        }
+        .personalInfo img{
+            height: 100px;
+            width: 100px;
+            border-radius: 50%;
+        }
+        .container .editBtn{
+            position: absolute;
+            right: 12px;
+            top: 12px;
+            background: var(--secondWte);
+            color: var(--blk);
+            width: 35px;
+            height: 35px;
+            align-content: center;
+            border-radius: 50%;
+            outline: none;
+            border: 2px solid var(--secondWte);
+        }
+       .grayText{
+        color: var(--grayText);
+        font-size: 0.9em;
+       }
+       .container.score .column{
+        text-align: center;
+       }
+       .container.score .column span{
+        color: var(--grayText);
+        font-size: 0.9em;
+       }
+
+       input[type='checkbox']:checked + form{
+        display: flex;
+        top:50%;left:50%;transform: translate(-50%,-50%);z-index:1;
+       }
+
+       .socialAccountEdits {
+            gap: 15px;
+       }

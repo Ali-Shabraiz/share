@@ -1,0 +1,22 @@
+<span onclick="notShowUplogInForm()" class="fa fa-times crossIcon"></span>
+        <div class="logo fa fa-shirt"></div>
+        <h2>Create an Account</h2>
+        <span class="text">Sign in to access your exclusive styles.</span>
+        <fieldset>
+            <label for="name">Name</label>
+            <input id="name" type="text" name="name" placeholder="Mr. Ali Shabraiz">
+        </fieldset>
+        <fieldset>
+            <label for="email">Email</label>
+            <input id="email" type="email" name="email" placeholder="example@gmail.com">
+        </fieldset>
+        <fieldset>
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" placeholder="Enter new Password">
+        </fieldset>
+        <fieldset>
+            <label for="conformPassword">Password</label>
+            <input type="password" id="conformPassword" name="conformPassword" placeholder="Conform new Password">
+        </fieldset>
+        <button type="submit" value="1">Create Account</button>
+        <span>Already have an Account? <span onclick="getSignLogForm('loginForm',rootofSignLogForm);">Log In</span></span>

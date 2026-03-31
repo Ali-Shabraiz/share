@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script async src="https://www.tiktok.com/embed.js"></script>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        #tiktokIdContainer {
+            padding: 10px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            /* grid-auto-rows: 10px; */
+            gap: 10px;
+            /* justify-content: center; */
+            width: 100%;
+            position: relative;
+            flex-wrap: wrap;
+            /* align-items: stretch; */
+        }
+
+        ::-webkit-scrollbar {
+            width: 0;
+            height: 0;
+            display: none;
+        }
+
+        blockquote {
+            /* width: 450px; */
+            /* max-width: 300px; */
+        }
+    </style>
+</head>
+
+<body>
+    <div id="tiktokIdContainer"></div>
+    <script>
+        const tiktokIdContainer = document.getElementById('tiktokIdContainer');
+        fetch('./API/fetch_all_tikTokIds.php').then(res => {
+            return res.json();
+        }).then(data => {
+            displayTIkTokID(data);
+        })
+        function displayTIkTokID(ids) {
+            ids.forEach(data => {
+                var newAccount = document.createElement('div');
+                newAccount.innerHTML = `<blockquote class="tiktok-embed" cite="${data.link}" data-unique-id="${data.idName}" data-embed-type="creator"> <section> <a target="_blank" href="https://www.tiktok.com/@${data.idName}?refer=creator_embed">@${data.idName}</a> </section> </blockquote>`
+                tiktokIdContainer.appendChild(newAccount);
+            });
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,23 @@
+* {
+    padding: 0;
+    box-sizing: border-box;
+    margin: 0;
+    font-family: "Inter", sans-serif;
+}
+
+:root {
+    --wte: #fff;
+    --blk: #111827;
+    --primeryBlue: #2563EB;
+    --secondWte: #f3f4f6;
+    --lightRed: #fEF2F2;
+    --skyBlue: #eff6ff;
+    --heartRed: #ef4444;
+    --blk6: rgba(0, 0, 0, 0.6);
+    --successGreen : rgb(1, 255, 1);
+    --navHeight: 75px;
+    --grayText: #6b7280;
+    --primaryDarkBlue: #1D4ED8;
+    --lightGray:  rgb(209, 213, 219);
+    --darkSkyBlue : #60a5fa;
+}
