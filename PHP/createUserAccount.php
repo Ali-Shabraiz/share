@@ -38,7 +38,6 @@ if ($stmt->execute()) {
     $sql = "CREATE TABLE `$tableName` (
   `ID` varchar(20) NOT NULL PRIMARY KEY,
   `fID` varchar(20) NOT NULL,
-  `friend` tinyint(1) NOT NULL DEFAULT 0,
   `follower` tinyint(1) NOT NULL,
   `following` tinyint(1) NOT NULL,
   `date` varchar(17) NOT NULL

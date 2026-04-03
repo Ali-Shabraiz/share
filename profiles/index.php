@@ -151,7 +151,8 @@ else{
             });
         }
         function displayProfiles(data){
-            var container = document.getElementById('profileCardContainer')
+            var container = document.getElementById('profileCardContainer');
+            container.innerHTML = ``;
             data.forEach(profile => {
                  var card = document.createElement('div');
                  card.classList.add('card');
@@ -184,10 +185,10 @@ else{
                         if(profile.facebook != null)
                         str +=`<a href="${profile.facebook}" class="fab fa-facebook"></a>`
                      str +=`</ul>
-                    <form class="controls" id="followForm_${profile.ID}" onsubmit="followHim('${profile.ID}')">
+                    <form class="controls" id="followForm_${profile.ID}" onsubmit="${followFunction(profile.isFollowed,profile.isFollowing)}('${profile.ID}')">
                         <input type="hidden" value="${profile.ID}" name="fID">
                         <input type="hidden" value="<?php  echo $MyData['ID']?>" name="id">
-                        <button type="submit" class="dangerButton" style="width:100%;">Follow</button>
+                        <button type="submit" class="dangerButton" style="width:100%;">${followText(profile.isFollowed,profile.isFollowing)}</button>
                     </form>
                     </div>
                     `;
@@ -197,6 +198,26 @@ else{
             deActiveForms();
         }
         fetch_all_profiles();
+        function followText(isFollowed,isFollowing){
+            if(isFollowed && isFollowing)
+                return "Unfriend";
+            else if(isFollowed == 0 && isFollowing == 1)
+                return "Unfollow";
+            else if(isFollowing == 0 && isFollowed == 1)
+                return "Follow Back";
+            else 
+                return "Follow";
+        }
+         function followFunction(isFollowed,isFollowing){
+            if(isFollowed && isFollowing)
+                return "unfollowHim";
+            else if(isFollowed == 0 && isFollowing == 1)
+                return "unfollowHim";
+            else if(isFollowing == 0 && isFollowed == 1)
+                return "followHim";
+            else 
+                return "followHim";
+        }
         
 
 
@@ -222,7 +243,18 @@ function followHim(id){
                 method: 'POST',
                 data: $(`#followForm_${id}`).serialize(),
                 success: (data => {
-                    console.log(data);
+                    fetch_all_profiles();
+                })
+            })
+        }
+        function unfollowHim(id){
+            console.log(id)
+            $.ajax({
+                url: '../PHP/unFollowHim.php',
+                method: 'POST',
+                data: $(`#followForm_${id}`).serialize(),
+                success: (data => {
+                    fetch_all_profiles();
                 })
             })
         }

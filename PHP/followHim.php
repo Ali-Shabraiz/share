@@ -11,12 +11,10 @@ $followId = generateUserID();
 
 $id = $_POST['id'];
 $fID = $_POST['fID'];
-// $nickName = $_POST['nickName'];
 $tableName = 'follow_'.$id;
 $tableName2 = 'follow_'.$fID;
 $follower = 0;
 $following = 1;
-// Folder where images will be stored
 
 $sql = "SELECT * FROM `$tableName` WHERE fID = ?";
 $stmt = $conn->prepare($sql);
@@ -29,24 +27,63 @@ $row = $result->fetch_assoc();
 if ($result->num_rows === 0) {
 $sql = "INSERT INTO `$tableName` (ID, fID, follower, following, date) VALUES (?, ?, ?, ?, ?)";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("sssss", $id, $fID, $follower, $following, $Date);
+$stmt->bind_param("ssiis", $followId, $fID, $follower, $following, $Date);
+if($stmt->execute()){
+$stmt = $conn->prepare("UPDATE user SET following = following+1 WHERE ID = ?");
+$stmt->bind_param("s", $id);
 $stmt->execute();
+}
+$follower = 1;
+$following = 0;
+$sql = "INSERT INTO `$tableName2` (ID, fID, follower, following, date) VALUES (?, ?, ?, ?, ?)";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("ssiis", $followId, $id, $follower, $following, $Date);
+if($stmt->execute()){
+$stmt = $conn->prepare("UPDATE user SET follower = follower+1 WHERE ID = ?");
+$stmt->bind_param("s", $fID);
+$stmt->execute();
+}
 } else {
-    if($row['following'])
-        $following = !$row['following'];
-    $sql = "UPDATE `$tableName` SET following = ? WHERE fID = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ss", $following,$fID);
-    if($stmt->execute()){
-        $sql = "UPDATE `$tableName2` SET follower = ? WHERE fID = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ss", $following,$fID);
-        $stmt->execute();
-    }
+    $following = 1;
+    $follower = 1;
+$sql = "UPDATE `$tableName` SET following = ? WHERE fID = ? AND following = 0";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("is", $following,$fID);
+$stmt->execute();
+$affected_row = $stmt->affected_rows;
+if($affected_row != 0){
+$stmt = $conn->prepare("UPDATE user SET following = following+1 WHERE ID = ?");
+$stmt->bind_param("s", $id);
+$stmt->execute();
 }
 
+$sql = "UPDATE `$tableName2` SET follower = ? WHERE fID = ? AND follower = 0";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("is", $follower,$id);
+$stmt->execute(); 
+$affected_row = $stmt->affected_rows;
+if($affected_row != 0){
+$stmt = $conn->prepare("UPDATE user SET follower = follower+1 WHERE ID = ?");
+$stmt->bind_param("s", $fID);
+$stmt->execute();
+}
+    $sql = "SELECT follower,following FROM `$tableName` WHERE fID = ? LIMIT 1";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $fID);
+    $stmt->execute();
+    $result1 = $stmt->get_result();
+    $row1 = $result1->fetch_assoc();
+    if($row1['follower'] && $row1['following']){
+        $stmt = $conn->prepare("UPDATE user SET friends  = friends + 1 WHERE ID = ?");
+        $stmt->bind_param("s", $id);
+        $stmt->execute();
+        $stmt = $conn->prepare("UPDATE user SET friends  = friends + 1 WHERE ID = ?");
+        $stmt->bind_param("s", $fID);
+        $stmt->execute();
+    }
+    
 
+}
 $stmt->close();
 $conn->close();
-
 ?>
