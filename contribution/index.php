@@ -59,8 +59,6 @@ else{
         .instagramCardsContainer .insta-card .fa{
             border-bottom-color: var(--clr);
             border-left-color: var(--clr);
-
-
         }
         .whatsAppCardsContainer .card .profilePic{
             /* position: absolute; */
@@ -470,7 +468,9 @@ qrCode.append(document.getElementById(`qrcode${profile.ID}`));
 
            })
         }
-
+        function displayTiktokAccounts(data){
+            
+        }
          function displayFBAccounts(data){
            data.forEach(profile => {
             let container = document.getElementById('facebookCardsContainer');
