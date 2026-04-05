@@ -251,10 +251,11 @@ else{
          }
          .WACard .fa,
          .FBCard .fa,
+         .TTCard .fa,
          .insta-card .fa{
             border-bottom-color: var(--clr);
             border-left-color: var(--clr);
-            z-index: 11133;
+            z-index: 11;
          }
 
 
@@ -296,6 +297,7 @@ else{
 
 .insta-card {
     text-align: center;
+    border: none;
 }
 
 /* QR container */
@@ -409,7 +411,7 @@ else{
                         <div class="details">
                             <section>
                                 <span><i class="far fa-heart"></i> 3,924</span>
-                                <span><i class="fa fa-commet"></i> 3,924</span>
+                                <span><i class="far fa-comment"></i> 3,924</span>
                             </section>
                             <section>
                                 <p>${post.message}</p>

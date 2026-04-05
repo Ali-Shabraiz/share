@@ -13,13 +13,14 @@ $id = $_COOKIE['userID'];
 $name = $_POST['name'];
 $data = $_POST['data'];
 $type = $_POST['type'];
+$message = $_POST['message'];
 $tableName = 'post_'.$id;
 
 
 
-$sql = "INSERT INTO `$tableName` (ID, name, data,type, uploadedBy, date) VALUES (?, ?, ?, ?, ?, ?)";
+$sql = "INSERT INTO `$tableName` (ID, name, data,type, uploadedBy,message, date) VALUES (?, ?, ?, ?, ?, ?, ?)";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("sssiss", $postID, $name,$data,$type,$id,$Date);
+$stmt->bind_param("sssisss", $postID, $name,$data,$type,$id,$message,$Date);
 $stmt->execute();
 $stmt = $conn->prepare("INSERT INTO posts (ID, type, uploadedBy, date) VALUES (?, ?, ?, ?)");
 $stmt->bind_param("sisi", $postID,$type,$id,$Date);

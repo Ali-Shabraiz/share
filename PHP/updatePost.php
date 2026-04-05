@@ -9,12 +9,13 @@ $id = $_COOKIE['userID'];
 $name = $_POST['name'];
 $data = $_POST['data'];
 $type = $_POST['type'];
+$message = $_POST['message'];
 $tableName = 'post_'.$id;
 $postID = $_POST['postID'];
 
-$sql = "UPDATE `$tableName` SET name = ?, data = ?, type = ? WHERE ID = ?";
+$sql = "UPDATE `$tableName` SET name = ?, data = ?, type = ?, message WHERE ID = ?";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("ssis", $name,$data,$type,$postID);
+$stmt->bind_param("ssiss", $name,$data,$type,$message,$postID);
 $stmt->execute();
 
 if($type == '4'){

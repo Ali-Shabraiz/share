@@ -28,6 +28,9 @@ $sql = "SELECT * FROM `$tableName` WHERE ID = ? LIMIT 1";
             <fieldset>
                 <input type="text" placeholder="<?php echo $row['data']?>" value="<?php echo $row['data'];?>" name="data">
             </fieldset>
+            <fieldset>
+                <input type="text" placeholder="Write Something about this post" name="message" value="<?php echo $row['message']?>">
+            </fieldset>
             <button>Update</button>
 
 
