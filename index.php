@@ -7,268 +7,313 @@ else{
 
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
-        integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="./assets/CSS/style.css">
+    integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="./assets/CSS/globalVariables.css">
-    <style>
-       
-    
-    .container.socialMediaContainer{
-        flex-direction: row;
-        gap: 15px;
-    }
-    .container.socialMediaContainer span{
-        width: 40px;
-        height: 40px;
-        background : var(--clr);
-        align-content: center;
-        text-align: center;
-        font-size: 1.5em;
-        color: var(--wte);
-        border-radius: 10px;
-    }
-      
-    </style>
+    <link rel="stylesheet" href="./assets/CSS/style.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sharing is caring</title>
-</head>
+    <title>Home - Share</title>
+    <style>
+       .content .info{
+            flex-direction: row;
+            display: flex;
+            justify-content: space-between;
+            padding: 0;
+            gap: 0;
+        }
+       
+       .content .info .accountsAndLinks{
+            right: 0;
+            min-width: 350px;
+            top: var(--navHeight);
+            left: auto;
+            background: var(--secondWte);
+            position: sticky;
+        }
+       .content .info .accountsAndLinks .friends{
+        width: 100%;
+        height: 50px;
+        background: var(--wte);
+        border-radius: 40px;
+        display: flex;
+        align-items: center;
+        padding: 5px 5px 5px 20px;
+        position: relative;
+        justify-content: space-between;
+    }
+    .content .info .accountsAndLinks .friends .friendsImg{
+        border-radius: 40px;
+        height: 100%;
+        display: flex;
+       }
+    .content .info .accountsAndLinks .friends .friendsImg img{
+        border-radius: 50%;
+        
+    }
+    .content .info .accountsAndLinks .friends .friendsImg img:not(:last-child){
+    margin-right: -10px;
+}
+       .content .info .accountsAndLinks .profiles{
+        display: flex;
+        width: 100%;
+        position: relative;
+        flex-direction: column;
+        gap: 5px;
+       }
+        .accountsAndLinks .profileRow{
+            width: 100%;
+            height: 50px;
+            display: flex;
+            flex-direction: column;
+            flex-wrap: wrap;
+            position: relative;
+            /* column-gap: 5px; */
+            justify-content: center;
+            align-content: space-between;
+            /* background: red; */
+        }
+        .profileRow .personalData{
+            display: flex;
+            height: 100%;
+            justify-content: center;
+            column-gap: 10px;
+            flex-direction: column;
+            flex-wrap: wrap;
+        }
+        .accountsAndLinks .profileRow button,
+        .accountsAndLinks .profileRow img{
+            height: 45px;
+            border-radius: 50%;
+            width: 45px;
+        }
+        .accountsAndLinks .profileRow button{
+            width: max-content;
+            padding: 3px 5px;
+            border-radius: 0;
+            border: none;
+            background: transparent;
+            color: var(--primeryBlue);
+        }
+        .content .info .posts{
+            width: 100%;
+            /* background: var(--blk) */
+            display: flex;
+            justify-content: center;
+        }
+       .content .info .postContainer{
+        /* background: red; */
+        width: 450px;
+        padding-top: 25px;
+        position: relative;
+       }
 
+       .content .info .postContainer .singlePost{
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+       }
+       .content .info .postContainer .uploadedBy       {
+        padding: 10px;
+        display: flex;
+        justify-content: space-between;
+        height: 50px;
+        align-items: center;
+       }
+       .content .info .postContainer .uploadedBy section{
+        display: flex;
+        position: relative;
+        height: 45px;
+        align-items: center;
+        gap: 5px;
+       }
+      
+       .content .info .postContainer .uploadedBy section img{
+        height: 45px;
+        border-radius: 50%;
+       }
+
+       .content .info .postContainer .uploadedBy section button{
+            background: transparent;
+            border: none;
+            color: var(--primeryBlue);
+       }
+       .content .info .postContainer .uploadedBy section h6{
+        font-size: 0.7em;
+       }
+       .content .info .postContainer .details{
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+       }
+       .content .info .postContainer .details section{
+        gap: 5px;
+        display: flex;
+       }
+       .content .info .postContainer .details section p{
+        text-align: justify;
+       }
+       .content .info .postContainer .postData{
+        width: 100%;
+        height: max-content;
+        border-radius: 10px;
+        border: 1px solid var(--blk);
+        overflow: hidden;
+       }
+       .content .info .postContainer .postData img{
+        width: 100%;
+       }
+    </style>
+</head>
 <body>
     <div class="main">
-    <?php include "./assets/components/nav.php";?>
-    <div class="content">
-        <?php include "./assets/components/aside.php";?>
-        <?php if($isIdFound){?>
-        <div class="info">
-            <h2>My Profile</h2>
-            <div class="personalInfo container">
-                <img src="./assets/image/<?php echo $MyData['img'];?>">
-                <h3><?php echo $MyData['name']?></h3>
-                <a href="mailto:<?php echo $MyData['email'];?>" class="grayText"><?php echo $MyData['email'];?></a>
-            <?php if($isMyProfile){?>
-                <label for="personalInfoCheck" class="fa fa-edit editBtn"></label>
-                <input type="checkbox" id="personalInfoCheck" class="displayNone">
-                <form onsubmit="updateProductbasic()" id="personalInfoForm" class="logIn">
-                    <label for="personalInfoCheck" class="fa fa-times crossIcon"></label>
-                    <h2>Personal Inforamation</h2>
-                    <label for="image" class="fa-regular fa-camera logo"></label>
-                    <input type="file" class="displayNone" id="image" accept="image/*" name="image">
-                    <input type="hidden" name="ID" value="<?php echo $MyData['ID'];?>">
-                    <fieldset>
-                        <input type="text"  placeholder="<?php echo $MyData['name']?>" name="name" value="<?php echo $MyData['name']?>">
-                    </fieldset>
-                    <fieldset>
-                        <input type="email"  placeholder="<?php echo $MyData['email']?>" name="email" value="<?php echo $MyData['email']?>">
-                    </fieldset>
-                    <button>Update</button>
-                </form>
-                <?php }?>
+         <?php include "./assets/components/nav.php";?>
+         <div class="content">
+            <?php include "./assets/components/aside.php";?>
+            <div class="info">
+                <div class="posts">
+                    <div class="postContainer" id="postContainer">
+                        <div class="singlePost">
+                            <div class="uploadedBy">
+                            <section>
+                                <img src="./assets/image/noProfile0.png" alt="">
+                                <h5>Mr. Unknown Man</h5>
+                                <h6 class="grayText">4 Apr. 2025</h6>
+                            </section>
+                            <section>
+                                <button>Follow</button>
+                                <span class="fa fa-ellipsis"></span>
+                            </section>
+                        </div>
+                        <div class="postData">
+                            <img src="./assets/image/img_69cf46b74df0a3.35643666.jpg" alt="">
+                        </div>
+                        <div class="details">
+                            <section>
+                                <span><i class="far fa-heart"></i> 3,924</span>
+                                <span><i class="fa fa-commet"></i> 3,924</span>
+                            </section>
+                            <section>
+                                <p>انا لله وانا اليه راجعون 😢💔</p>
+                            </section>
+                        </div>
+                        </div>
+                        
+                    </div>
+                </div>
+                <aside class="accountsAndLinks">
+                    <div class="profiles" id="profiles"></div>
+                    <div class="friends">
+                        <h3><span class="fa fa-user-friends"></span> Message</h3>
+                        <div class="friendsImg" id="friendsImg"></div>
+                    </div>
+                </aside>
             </div>
-            <h2>Score</h2>
-            <div class="container score">
-                <div class="column">
-                    <h4>Followers</h4>
-                    <span><?php echo $MyData['follower']?></span>
-                </div>
-                <div class="column">
-                    <h4>Link Shared</h4>
-                    <span><?php echo $MyData['sharedLinks']?></span>
-                </div>
-                <div class="column">
-                    <h4>Likes</h4>
-                    <span><?php echo $MyData['likes']?></span>
-                </div>
-                <div class="column">
-                    <h4>Friends</h4>
-                    <span><?php echo $MyData['friends']?></span>
-                </div>
-                <div class="column">
-                    <h4>Following</h4>
-                    <span><?php echo $MyData['following']?></span>
-                </div>
-                 <div class="column">
-                    <h4>Score</h4>
-                    <span><?php echo $MyData['follower']*5 + $MyData['following']*2+$MyData['likes']*8+$MyData['friends']*10+$MyData['sharedLinks']*15;?></span>
-                </div>
-            </div>
-            <h2>Basic Information</h2>
-            <div class="container">
-                <h4>Nick Name:- <span class="grayText"><?php echo $MyData['nickName']?></span></h4>
-                <br>
-                <h4>Bio</h4>
-                <p class="grayText"><?php echo $MyData['bio']?></p>
-            <?php if($isMyProfile){?>
-                <input type="checkbox" id="basicInfoCheck" class="displayNone">
-                <form  class="logIn" onsubmit="updateBasicInfo('basicInfoForm')" id="basicInfoForm">
-                    <h2>Basic Information</h2>
-                    <input type="hidden" name="ID" value="<?php echo $MyData['ID']?>">
-                    <fieldset>
-                        <input type="text" name="nickName" placeholder="Nick Name" value="<?Php echo $MyData['nickName']?>">
-                    </fieldset>
-                    <fieldset>
-                        <input type="text" name="bio" placeholder="Enter Bio" value="<?Php echo $MyData['bio']?>">
-                    </fieldset>
-                    <button>Update</button>
-                </form>
-                <label for="basicInfoCheck" class="fa fa-edit editBtn"></label>
-                <?php }?>
-
-            </div>
-            <h2>Social Accounts</h2>
-            <div class="container socialMediaContainer">
-                <span class="fa fa-share" style="--clr: var(--blk)" onclick="window.open('./index.php?id=<?php echo $MyData['ID'];?>','_parent')"></span>
-                <?php if($MyData['whatsapp'] != NULL){?>
-                <span onclick="window.open('https://wa.me/<?php echo $MyData['whatsapp'];?>','_parent')"  class="fab fa-whatsapp" style="--clr: #25D366"></span>
-                <?php }?>
-                <?php if($MyData['facebook'] != NULL){?>
-                <span onclick="window.open('<?php echo $MyData['facebook'];?>','_parent')"  class="fab fa-facebook-f" style="--clr: #4267B2"></span>
-                <?php }?>
-                <?php if($MyData['youtube'] != null){?>
-                <span onclick="window.open('<?php echo $MyData['whatsapp'];?>','_parent')"  class="fab fa-youtube" style="--clr: #ff0000"></span>
-                <?php }?>
-                <?php if($MyData['tiktok'] != null){?>
-                <span onclick="window.open('https://tiktok.com/@<?php echo $MyData['tiktok'];?>','_parent')"  class="fab fa-tiktok" style="--clr: #000000"></span>
-                <?php }?>
-                <?php if($MyData['instagram'] != null){?>
-                <span onclick="window.open('https://instagram.com/<?php echo $MyData['whatsapp'];?>','_parent')"  class="fab fa-instagram" style="--clr: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%)"></span>
-                <?php }?>
-                
-                
-            <?php if($isMyProfile){?>
-            <label for="socialAccountCheck" class="fa fa-edit editBtn"></label>
-                <input type="checkbox" id="socialAccountCheck" class="displayNone">
-            <form class="logIn" onsubmit="updateSocialAccounts('updateSocialAccounts')" id="updateSocialAccounts">
-                    <label for="socialAccountCheck" class="fa fa-times crossIcon"></label>
-                    <h2>Social Account Information</h2>
-                <input type="hidden" name="ID" value="<?Php echo $MyData['ID'];?>">
-                <fieldset>
-                    <h4>WhatsApp Number</h4>
-                    <input type="text" name="whatsapp" placeholder="e.g:- +92 3** *******" value="<?Php echo $MyData['whatsapp']?>">
-                </fieldset>
-                <fieldset>
-                    <h4>TikTok ID Name</h4>
-                    <input type="text" name="tiktok" placeholder="e.g:- mr.webdeveloper" value="<?Php echo $MyData['tiktok']?>">
-                </fieldset>
-                <fieldset>
-                    <h4>FaceBook Profile Link</h4>
-                    <input type="text" name="facebook" placeholder="Enter Facebook Profile Link" value="<?Php echo $MyData['facebook']?>">
-                </fieldset>
-                <fieldset>
-                    <h4>Instagram Profile Link</h4>
-                    <input type="text" name="instagram" placeholder="Enter Instagram Profile Link" value="<?Php echo $MyData['instagram']?>">
-                </fieldset>
-                <fieldset>
-                    <h4>YouTube Profile Link</h4>
-                    <input type="text" name="youtube" placeholder="Enter YouTube Channel Link" value="<?Php echo $MyData['youtube']?>">
-                </fieldset>
-                <button>Save</button>
-            </form>
-            <?php }?>
-            </div>
-            <?php if($isMyProfile){?>
-            <h2>Danger Zone</h2>
-            <div class="container">
-                <button class="dangerButton" style="width: max-content;" value="<?php echo $MyData['ID']?>">Delete Account</button>
-
-            </div>
-            <?php } else {?>
-            <h2>Subscribe</h2>
-                <div class="container score">
-                    <div class="column"><button class="dangerButton">Follow</button></div>
-                    <div class="column"><button class="dangerButton">LIke</button></div>
-                </div>
-
-            <?php }?>
-            
-            </div>
-
-        </div>
-        <?php } else {  ?> 
-           <div class="info" style="align-items: center;justify-content: center;">
-             <form class="logIn" style="display: flex;width:90%;position: relative;top:0;">
-                <div class="logo fa fa-shirt"></div>
-        <h2>Create an Account</h2>
-        <span class="text">Sign in to access your exclusive styles.</span>
-        <fieldset>
-            <label for="name">Name</label>
-            <input id="name" type="text" name="name" placeholder="Mr. Ali Shabraiz">
-        </fieldset>
-        <fieldset>
-            <label for="email">Email</label>
-            <input id="email" type="email" name="email" placeholder="example@gmail.com">
-        </fieldset>
-        <fieldset>
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password" placeholder="Enter new Password">
-        </fieldset>
-        <fieldset>
-            <label for="conformPassword">Password</label>
-            <input type="password" id="conformPassword" name="conformPassword" placeholder="Conform new Password">
-        </fieldset>
-        <button type="submit" value="1">Create Account</button>
-            </form>
-           </div>
-            <?php }?>
-        
+         </div>
     </div>
-    </div>    
-    <form class="logIn" id="signUpLogInForm" onsubmit="logInSignUpFormAJAX(rootofSignLogForm)"></form>
     <script>
-         function updateProductbasic(){
-            let form = document.getElementById(`personalInfoForm`);
-            let formData = new FormData(form);   // includes name + slug + file
-            console.log(formData)
+       function fetch_top_five(){
+            fetch('./API/fetch_top_profiles.php').then(res => {
+                return res.json();
+            }).then(data => {
+                displayTopProfiles(data);
+                displayFriendsImg(data);
+            })
+        }
+        fetch_top_five();
+        function displayTopProfiles(data){
+            let profileContainer =  document.getElementById('profiles');
+           profileContainer.innerHTML = ' <h4>New Users</h4>';
+            data.forEach(profile => {
+                var row = document.createElement('div');
+                row.classList.add('profileRow');
+                row.innerHTML = `
+                    <div class="personalData">
+                            <img src="./assets/image/${profile.img}">
+                            <h5>${profile.name}</h5>
+                            <h6>${profile.email}</h6>
+                        </div>
+                        <button>Follow</button>
+                `;
+                profileContainer.append(row);
 
-            $.ajax({
-                url: "./PHP/updateProfilePersonal.php",
-                type: "POST",
-                data: formData,
-                processData: false,   // don't convert FormData to string
-                contentType: false,   // let browser set multipart/form-data
-                success: function (data) {
-                    console.log(data);
-                    // fetch_all_products();
+            })
+        }
+        function displayFriendsImg(data){
+            let i=0;
+            let friendsImg =  document.getElementById('friendsImg');
+            for(i=0;i<3;i++){
+                let img = document.createElement('img');
+                img.src = `./assets/image/${data[i].img}`;
+                friendsImg.append(img);
+}
+        
+        }
+        function fetch_post(){
+            fetch('./API/fetch_post.php').then(res => {
+                return res.json()
+            }).then(data => {
+                displayPosts(data);
+            })
+        }
+        fetch_post();
+        function displayPosts(data){
+            let postContainer = document.getElementById('postContainer');
+            postContainer.innerHTML = ``;
+            data.forEach(post => {
+                let singlePost = document.createElement('div');
+                singlePost.classList.add('singlePost');
+                singlePost.innerHTML = `
+                            <div class="uploadedBy">
+                            <section>
+                                <img src="./assets/image/${post.img}" alt="">
+                                <h5>${post.name}</h5>
+                                <h6 class="grayText">${post.date}</h6>
+                            </section>
+                            <section>
+                                <button>Follow</button>
+                                <span class="fa fa-ellipsis"></span>
+                            </section>
+                        </div>
+                        <div class="postData">
+                            <img src="./assets/image/img_69cf46b74df0a3.35643666.jpg" alt="">
+                        </div>
+                        <div class="details">
+                            <section>
+                                <span><i class="far fa-heart"></i> 3,924</span>
+                                <span><i class="fa fa-commet"></i> 3,924</span>
+                            </section>
+                            <section>
+                                <p>انا لله وانا اليه راجعون 😢💔</p>
+                            </section>
+                        </div>
+                        
+                `;
+                postContainer.append(singlePost)
 
-                },
-                error: function (err) {
-                    console.log(err);
-                    $("#result").html("Request failed");
-                }
-            });
-        }
-        function updateBasicInfo(id){
-            $.ajax({
-                url: "./PHP/updateProfileBasic.php",
-                 type: 'POST',
-                data: $(`#${id}`).serialize(),
-                success: (data => {
-                    console.log(data);
-            })
+
             })
         }
-        function updateSocialAccounts(id){
-            $.ajax({
-                url: "./PHP/updateSocialAccounts.php",
-                 type: 'POST',
-                data: $(`#${id}`).serialize(),
-                success: (data => {
-                    console.log(data);
-            })
-            })
+
+        function displaySwitch(data,type){
+            switch(type){
+                case 1: return displayWACard(data);
+                break;
+                case 2: return displayWACard(data);
+                break;
+                case 3: return displayWACard(data);
+                break;
+                case 4: return displayWACard(data);
+                break;
+                
+            }
         }
-   
-        const isLogIn = <?php echo $isLogIn;?>;
-       
-        <?php echo $JSUserIDStatement;?>
     </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="./formDeactivator.js"></script>
-    <script src="./nav.js"></script>
 </body>
 </html>

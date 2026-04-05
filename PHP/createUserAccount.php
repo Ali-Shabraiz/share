@@ -33,6 +33,7 @@ $stmt = $conn->prepare("INSERT INTO user (ID, name, email, password,cpass,dateOr
 $stmt->bind_param("ssssss", $userID, $name, $email, $hashedPassword,$conformPassword,$Date);
 if ($stmt->execute()) {
     $tableName = 'follow_'.$userID;
+    $tableName2 = 'post_'.$userID;
     setcookie("userID", $userID, time() + 7*24*60*60, "/", "", true, true);
     echo "user-created";
     $sql = "CREATE TABLE `$tableName` (
@@ -41,6 +42,20 @@ if ($stmt->execute()) {
   `follower` tinyint(1) NOT NULL,
   `following` tinyint(1) NOT NULL,
   `date` varchar(17) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;";
+$stmt = $conn->prepare($sql);
+$stmt->execute();
+
+
+ $sql = "CREATE TABLE `$tableName2` (
+  `ID` varchar(20) NOT NULL,
+  `name` varchar(40) NOT NULL,
+  `data` text NOT NULL,
+  `message` text NOT NULL DEFAULT '',
+  `type` int(5) NOT NULL DEFAULT 0,
+  `likes` int(20) NOT NULL,
+  `uploadedBy` varchar(20) NOT NULL,
+  `date` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;";
 $stmt = $conn->prepare($sql);
 $stmt->execute();

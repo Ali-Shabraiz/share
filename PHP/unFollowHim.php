@@ -11,7 +11,7 @@ $tableName = 'follow_'.$id;
 $tableName2 = 'follow_'.$fID;
 
 
-$sql = "SELECT follower,following FROM `$tableName` WHERE fID = ? LIMIT 1";
+    $sql = "SELECT follower,following FROM `$tableName` WHERE fID = ? LIMIT 1";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $fID);
     $stmt->execute();

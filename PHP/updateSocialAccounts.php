@@ -3,7 +3,9 @@ include "./config.php";
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
-$id = $_POST['ID'];
+if(isset($_COOKIE['userID'])){
+    $id = $_COOKIE['userID'];
+    // $postTable = 'post_'.$id;
 // Folder where images will be stored
 if(isset($_POST['whatsapp'])){
     $whatsApp = $_POST['whatsapp'];
@@ -44,6 +46,7 @@ if(isset($_POST['youtube'])){
         $stmt->bind_param("ss", $youtube, $id);
         $stmt->execute();
     }
+}
 }
 
 
