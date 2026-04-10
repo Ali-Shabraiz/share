@@ -261,7 +261,7 @@ else{
                 <label for="addFormCheck" onclick="getAddForm('Facebook')"><h3>Add Facebook</h3><span class="fa fa-plus"></span></label>
                 <label for="addFormCheck" onclick="getAddForm('Instagram')"><h3>Add Instagram</h3><span class="fa fa-plus"></span></label>
                 <label for="addFormCheck" onclick="getAddForm('Tiktok')"><h3>Add TikTok</h3><span class="fa fa-plus"></span></label>
-                <label for="addFormCheck" onclick="getAddForm('Snapchat')"><h3>Add SnapChat</h3><span class="fa fa-plus"></span></label>
+                <label for="addFormCheck" onclick="getAddForm('Image')"><h3>Add Image</h3><span class="fa fa-plus"></span></label>
             </div>
 
         </div>
@@ -306,15 +306,18 @@ else{
     .catch((error) => console.log('Error:', error));
   } else {
     alert('Linked Copied');
-    // navigator.clipboard.writeText(`https://share.thedeepedits.com/profile/index.php?id=${id}`);
+    navigator.clipboard.writeText(`https://share.thedeepedits.com/profile/index.php?id=${id}`);
   }
 }
 function uploadPost(id){
-            console.log(id)
+            let form = document.getElementById(`${id}`);
+            let formData = new FormData(form);
             $.ajax({
                 url: '../PHP/uploadPost.php',
                 method: 'POST',
-                data: $(`#${id}`).serialize(),
+                data: formData,
+                processData: false,   // don't convert FormData to string
+                contentType: false,   // let browser set multipart/form-data
                 success: (data => {
                     fetch_all_myPosts();
                 })
@@ -387,8 +390,6 @@ function uploadPost(id){
         function displayTiktokAccounts(data){
             let tiktokIdContainer = document.getElementById('TikTokCardsContainer');
             tiktokIdContainer.innerHTML = '';
-
-            
                 data.forEach(profile => {
                     let card = document.createElement('div');
                     card.style.setProperty('--clr','#000')
@@ -405,7 +406,7 @@ function uploadPost(id){
                             Follow ${profile.data}
                         </a>
                     </div>
-                    `
+                    `;
                 tiktokIdContainer.appendChild(card);
 
                 const qrCode = new QRCodeStyling({
@@ -427,10 +428,11 @@ qrCode.append(document.getElementById(`qrcode${profile.ID}`));
         
         function displayWaAccounts(data){
             let i = 0;
-           data.forEach(profile => {
-            i++;
+            
             let container = document.getElementById('whatsAppCardsContainer');
             container.innerHTML = '';
+           data.forEach(profile => {
+            i++;
 
             let card = document.createElement('div');
             card.style.setProperty('--clr','#25D366')
@@ -451,7 +453,7 @@ qrCode.append(document.getElementById(`qrcode${profile.ID}`));
             container.appendChild(card);
 
 
-const qrCode = new QRCodeStyling({
+let qrCode = new QRCodeStyling({
     width: 160,
     height: 160,
     data: `https://wa.me/${profile.data}`,
@@ -468,13 +470,11 @@ qrCode.append(document.getElementById(`qrcode${profile.ID}`));
 
            })
         }
-        function displayTiktokAccounts(data){
-            
-        }
+        
          function displayFBAccounts(data){
+             let container = document. getElementById('facebookCardsContainer');
+             container.innerHTML = '';
            data.forEach(profile => {
-            let container = document.getElementById('facebookCardsContainer');
-            container.innerHTML = '';
             let card = document.createElement('div');
             card.classList.add('card')
             card.style.setProperty('--clr','#1877F2')

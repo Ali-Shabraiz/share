@@ -1,4 +1,5 @@
 <?php
+header("Content-Type: application/json; charset=UTF-8");
 include "./config.php";
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
@@ -7,9 +8,19 @@ function generateUserID($length = 15) {
     $chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     return substr(str_shuffle($chars), 0, $length);
 }
+function followText($isFollowed,$isFollowing){
+            if($isFollowed && $isFollowing)
+                return "Unfriend";
+            else if($isFollowed == 0 && $isFollowing == 1)
+                return "Unfollow";
+            else if($isFollowing == 0 && $isFollowed == 1)
+                return "Follow Back";
+            else 
+                return "Follow";
+        }
 $followId = generateUserID();
 
-$id = $_POST['id'];
+$id = $_COOKIE['userID'];
 $fID = $_POST['fID'];
 $tableName = 'follow_'.$id;
 $tableName2 = 'follow_'.$fID;
@@ -81,9 +92,16 @@ $stmt->execute();
         $stmt->bind_param("s", $fID);
         $stmt->execute();
     }
-    
-
 }
+
+        $stmt = $conn->prepare("SELECT follower,following,friends FROM user WHERE ID = ? LIMIT 1");
+        $stmt->bind_param("s", $fID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+        $row['followText'] = followText($follower,$following);
+        echo json_encode($row);
+
 $stmt->close();
 $conn->close();
 ?>

@@ -15,6 +15,9 @@ if(isset($_COOKIE['userID'])){
     $stmt->bind_param("s", $postID);
     $stmt->execute();
     $stmt->close();
+    $stmt = $conn->prepare("UPDATE user SET sharedLinks = sharedLinks - 1 WHERE ID = ?");
+    $stmt->bind_param("s", $userID);
+    $stmt->execute();
 }
 
 $conn->close();

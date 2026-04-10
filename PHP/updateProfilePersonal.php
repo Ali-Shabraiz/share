@@ -30,7 +30,7 @@ if (!in_array($ext, $allowed)) {
 }
 
 // Optional: max 5MB
-if ($_FILES["image"]["size"] > 5 * 1024 * 1024) {
+if ($_FILES["image"]["size"] > 10 * 1024 * 1024) {
     exit("File too large (max 5MB)");
 }
 

@@ -1,4 +1,4 @@
-<aside>
+<aside class="leftAside">
             <ul>
                 <li>Home</li>
                 <li>Profiles</li>

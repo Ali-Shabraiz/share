@@ -3,9 +3,11 @@ include "./config.php";
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
+if($_COOKIE['userID']){
+    
 $following = 0;
 $follower = 0;
-$id = $_POST['id'];
+$id = $_COOKIE['userID'];
 $fID = $_POST['fID'];
 $tableName = 'follow_'.$id;
 $tableName2 = 'follow_'.$fID;
@@ -42,10 +44,6 @@ $stmt->execute();
 
 
 
-
-
-
-
 $sql = "UPDATE `$tableName2` SET follower = ? WHERE fID = ? AND follower = 1";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("is", $follower,$id);
@@ -71,6 +69,7 @@ $stmt->execute();
         $stmt->bind_param("s",$id);
         $stmt->execute();
     }
+}
     
 
 

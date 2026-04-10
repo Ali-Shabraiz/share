@@ -4,8 +4,8 @@ if (isset($_COOKIE['userID'])) {
 }
 else{
     $mainBtnFunction = "showSignUpLogInForm('./')";
-
 }
+$folderLoc = './';
 ?>
 
 <!DOCTYPE html>
@@ -21,8 +21,13 @@ else{
     <script src="https://unpkg.com/qr-code-styling/lib/qr-code-styling.js"></script>
     <link rel="stylesheet" href="./assets/CSS/globalVariables.css">
     <script async src="https://www.tiktok.com/embed.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="./follow.js"></script>
     <title>Home - Share</title>
     <style>
+      body{
+        overflow-x: hidden;
+      }
        .content .info{
             flex-direction: row;
             display: flex;
@@ -88,6 +93,9 @@ else{
             column-gap: 10px;
             flex-direction: column;
             flex-wrap: wrap;
+        }
+        .accountsAndLinks .profileRow .fa-user-plus{
+            display: none;
         }
         .accountsAndLinks .profileRow button,
         .accountsAndLinks .profileRow img{
@@ -165,8 +173,7 @@ else{
        .content .info .postContainer .postData{
         width: 100%;
         height: max-content;
-        border-radius: 10px;
-        border: 1px solid var(--blk);
+
     }
     .content .info .postContainer .postData:has(:not( .WACard)){
            overflow: visible;
@@ -174,6 +181,8 @@ else{
        }
        .content .info .postContainer .postData img{
         width: 100%;
+        border-radius: 15px;
+
        }
          .WACard,.FBCard,.TTCard,.insta-card{
             width: 100%;
@@ -321,6 +330,126 @@ else{
 
 }
 
+@media (max-width: 1130px){
+    :root{
+        --asideWidth: 200px;
+    }
+    aside{
+        width: var(--asideWidth);
+    }
+       .content .info .accountsAndLinks {
+        min-width: 300px;
+       }
+       .content .info .accountsAndLinks h5{
+        font-size: 0.7em;
+       }
+       .content .info .accountsAndLinks h6{
+        font-size: 0.6em;
+       }
+       .content .info .postContainer{
+        width: 400px;
+       }
+}
+@media (max-width: 920px){
+       .content .info  {
+        width: 100%;
+       }
+    .leftAside{
+        display: none;
+    }
+}
+@media (max-width: 715px){
+       .content .info  .postContainer{
+        width: 300px;
+       }
+
+}
+@media (max-width: 715px){
+    .content .info  .postContainer{
+        width: 400px;
+       }
+       .content .info  {
+        flex-direction: column-reverse;
+       }
+        .content .info .accountsAndLinks .friends,
+       .content .info .accountsAndLinks .profiles .profileRow h6,
+       .content .info .accountsAndLinks .profiles h4{
+        
+        
+        display: none;
+        }
+        .content .info .accountsAndLinks{
+            height: max-content;
+            width: 100%;
+            overflow-x: auto;
+            position: relative;
+            border-top: 2px solid var(--blk);
+            top: 0;
+        }
+       .content .info .accountsAndLinks .profiles{
+            flex-direction: row;
+            justify-content: flex-start;
+            gap: 10px;
+        }
+        .content .info .accountsAndLinks .profiles .profileRow .personalData,
+       .content .info .accountsAndLinks .profiles .profileRow{
+            flex-wrap: nowrap
+       }
+       .content .info .accountsAndLinks .profiles .profileRow{
+        position: relative;
+        /* background: red; */
+        height: 100px;
+        gap: 10px;
+        justify-content: space-between;
+       }
+        .content .info .accountsAndLinks .profiles .profileRow .personalData{
+ align-content: center;
+        text-align: center;
+        align-items: center;
+        }
+        .content .info .accountsAndLinks .profiles .profileRow .personalData .img {
+            /* background: yellow; */
+            position: relative;
+            display: flex;
+            justify-content: center;
+        
+        }
+        .content .info .accountsAndLinks .profiles .profileRow .personalData .img img{
+            width: 75px;
+            height: 75px;
+        }
+        .content .info .accountsAndLinks .profiles .profileRow .personalData .fa-user-plus{
+            position: absolute;
+            display: block;
+            
+            
+            bottom: 5px;
+            width: 40px;
+            height: 20px;
+            font-size: 0.9em;
+            color: var(--wte);
+            background: var(--blk);
+            align-content: center;
+            text-align: center;
+            border-radius: 5px;
+        }
+       
+       .content .info .accountsAndLinks .profiles .profileRow button {
+        display: none;
+       }
+       .content .info .accountsAndLinks .profiles .profileRow h5{
+        font-size: 0.6em;
+        max-width: 13ch;   /* limits to ~16 characters */
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+       }
+       
+
+}
+
+
+
         
     </style>
 </head>
@@ -343,7 +472,22 @@ else{
             </div>
          </div>
     </div>
+    <script src="./nav.js"></script>
     <script>
+         function shareProfile(text,name) {
+  if (navigator.share) {
+    navigator.share({
+      title: `Share About ${name}`,
+      text: `See Information about ${name}`,
+      url: `${text}`
+    })
+    .then(() => console.log('Shared successfully'))
+    .catch((error) => console.log('Error:', error));
+  } else {
+    alert('Linked Copied');
+    navigator.clipboard.writeText(text);
+  }
+}
        function fetch_top_five(){
             fetch('./API/fetch_top_profiles.php').then(res => {
                 return res.json();
@@ -355,17 +499,20 @@ else{
         fetch_top_five();
         function displayTopProfiles(data){
             let profileContainer =  document.getElementById('profiles');
-           profileContainer.innerHTML = ' <h4>New Users</h4>';
+           profileContainer.innerHTML = ' <h4>Top Users</h4>';
             data.forEach(profile => {
                 var row = document.createElement('div');
                 row.classList.add('profileRow');
                 row.innerHTML = `
                     <div class="personalData">
+                            <div class="img">
                             <img src="./assets/image/${profile.img}">
+                            <span class="fa fa-user-plus"></span>
+                            </div>
                             <h5>${profile.name}</h5>
                             <h6>${profile.email}</h6>
                         </div>
-                        <button>Follow</button>
+                        <button>${followText(profile.isFollowed,profile.isFollowing)}</button>
                 `;
                 profileContainer.append(row);
 
@@ -381,17 +528,20 @@ else{
 }
         
         }
-        function fetch_post(){
-            fetch('./API/fetch_post.php').then(res => {
+        function fetch_post(scrolled,firstReq){
+            allowToRequestPosts = 0;
+            fetch(`./API/fetch_post.php${firstReq}`).then(res => {
                 return res.json()
             }).then(data => {
-                displayPosts(data);
+                displayPosts(data,!scrolled);
+                allowToRequestPosts = 1;
             })
         }
-        fetch_post();
-        function displayPosts(data){
+        fetch_post(0,'?firstReq=1');
+        function displayPosts(data,scrolled){
             let postContainer = document.getElementById('postContainer');
-            postContainer.innerHTML = ``;
+            if(scrolled)
+                postContainer.innerHTML = ``;
             data.forEach(post => {
                 let singlePost = document.createElement('div');
                 singlePost.classList.add('singlePost');
@@ -403,15 +553,15 @@ else{
                                 <h6 class="grayText">${post.date}</h6>
                             </section>
                             <section>
-                                <button>Follow</button>
+                                <button onclick="followHim('<?php echo $folderLoc?>','${post.uID}')">${followText(post.isFollowed,post.isFollowing)}</button>
                                 <span class="fa fa-ellipsis"></span>
                             </section>
                         </div>
-                        <div class="postData" id="postData${post.ID}"></div>
+                        <div class="postData" id="postData${post.postID}"></div>
                         <div class="details">
                             <section>
-                                <span><i class="far fa-heart"></i> 3,924</span>
-                                <span><i class="far fa-comment"></i> 3,924</span>
+                                <span onclick="likeIt('${post.ID}')"><i id="likeBtn${post.ID}" class="${post.likebyMe ? 'fa' : 'far'} fa-heart" style="color: var(${(post.likebyMe) ? '--heartRed': '--blk'})"></i><span id="likeCount${post.ID}"> ${post.likes}</span></span>
+                                <span><i class="far fa-comment"></i> 0</span>
                             </section>
                             <section>
                                 <p>${post.message}</p>
@@ -420,16 +570,19 @@ else{
                         
                 `;
                 postContainer.append(singlePost);
+                console.log(post.isFollowing)
                 displaySwitch(post,post.type);
-                
             })
         }
+       
         
         function genrateQR(data){
+            if(data.type == 1)
+                data.data = `https://wa.me/${data.data}`;
             const qrCode = new QRCodeStyling({
     width: 160,
     height: 160,
-    data: `https://wa.me/${data.data}`,
+    data: `${data.data}`,
     dotsOptions: {
         color: "#000",
         type: "square"
@@ -439,11 +592,27 @@ else{
     }
 });
 
-qrCode.append(document.getElementById(`qrcode${data.ID}`));
+qrCode.append(document.getElementById(`qrcode${data.postID}`));
+        }
+
+        function likeIt(postID){
+            $.ajax({
+                url: './PHP/likePost.php',
+                method: 'POST',
+                data: {postID: postID},
+                success: (data => {
+                    if(data.condition)
+                        document.getElementById(`likeBtn${postID}`).classList.replace('far','fa');
+                    else
+                        document.getElementById(`likeBtn${postID}`).classList.replace('fa','far');
+                    document.getElementById(`likeCount${postID}`).textContent = ' '+data.likes;
+                    document.getElementById(`likeBtn${postID}`).style.color = `var(${data.color})`;
+                })
+            })
         }
         
         function displaySwitch(data,type){
-            console.log(document.getElementById(`postData${data.ID}`))
+            
             if(type == 1){
                 displayWACard(data);
                 genrateQR(data);
@@ -454,13 +623,19 @@ qrCode.append(document.getElementById(`qrcode${data.ID}`));
                 displayTikTokCard(data);
             } else if(type == 4){
                 displayInstaCard(data);
-            }
+            } else if(type == 5)
+                displayImage(data)
+        }
+        function displayImage(data){
+             document.getElementById(`postData${data.postID}`).innerHTML = `
+                <img src="./assets/image/${data.data}">
+             `
         }
         function displayWACard(data){
-            document.getElementById(`postData${data.ID}`).innerHTML = ` <div class="WACard postCard" style="--clr: #25D366"><img  src="./assets/image/noProfile0.png" class="profilePic" width="50">
+            document.getElementById(`postData${data.postID}`).innerHTML = ` <div class="WACard postCard" style="--clr: #25D366"><img  src="./assets/image/noProfile0.png" class="profilePic" width="50">
                     <i onclick="shareProfile('https://wa.me/${data.data}','${data.dataName}')" class="fa fa-share"></i>
                     <h3>${data.dataName}</h3>
-                    <div class="qrcode" id="qrcode${data.ID}">
+                    <div class="qrcode" id="qrcode${data.postID}">
                         <div class="fab fa-whatsapp"></div>
                         <a class="number" href="https://wa.me/${data.data}">
                             Chat with ${data.data}
@@ -470,7 +645,7 @@ qrCode.append(document.getElementById(`qrcode${data.ID}`));
             `;
         }
         function displayTikTokCard(data){
-             document.getElementById(`postData${data.ID}`).innerHTML = ` <div class="TTCard postCard" style="--clr: #000">
+             document.getElementById(`postData${data.postID}`).innerHTML = ` <div class="TTCard postCard" style="--clr: #000">
                     <i onclick="shareProfile('https://tiktok.com/@${data.data}','${data.dataName}')" class="fa fa-share"></i>
                     <blockquote class="tiktok-embed" cite="https://tiktok.com/@${data.data}" data-unique-id="${data.data}" data-embed-type="creator"> <section> <a target="_blank" href="https://www.tiktok.com/@${data.data}?refer=creator_embed">${data.dataName}</a> </section> </blockquote>
                     </div>
@@ -478,10 +653,10 @@ qrCode.append(document.getElementById(`qrcode${data.ID}`));
                    
         }
         function displayFBCard(data){
-            document.getElementById(`postData${data.ID}`).innerHTML = ` <div class="FBCard postCard" style="--clr: #1877F2">
+            document.getElementById(`postData${data.postID}`).innerHTML = ` <div class="FBCard postCard" style="--clr: #1877F2">
                     <i onclick="shareProfile('${data.data}','${data.dataName}')" class="fa fa-share"></i>
                     <h3>${data.dataName}</h3>
-                    <div class="qrcode" id="qrcode${data.ID}">
+                    <div class="qrcode" id="qrcode${data.postID}">
                         <a class="number" href="${data.data}">
                             Follow ${data.dataName}
                         </a>
@@ -490,7 +665,7 @@ qrCode.append(document.getElementById(`qrcode${data.ID}`));
             `;
         }
         function displayInstaCard(data){
-            document.getElementById(`postData${data.ID}`).innerHTML = `<div class="insta-card postCard">
+            document.getElementById(`postData${data.postID}`).innerHTML = `<div class="insta-card postCard">
              <i onclick="shareProfile('https://instagram.com/${data.data}','${data.dataName}')" class="fa fa-share"></i>
                         <h3>${data.dataName}</h3>
                         <div class="qrcode" style="--bg: url('./assets/qrImg/qr_${data.ID}.jpg');">
@@ -508,6 +683,21 @@ qrCode.append(document.getElementById(`qrcode${data.ID}`));
                         </div>
             `
         }
+
+        var allowToRequestPosts = 1;
+        window.addEventListener("scroll", () => {
+  const scrollTop = window.scrollY;
+  const windowHeight = window.innerHeight;
+  const documentHeight = document.documentElement.scrollHeight;
+
+  const scrolledPercentage = (scrollTop + windowHeight) / documentHeight;
+
+  console.log(scrolledPercentage)
+  if (scrolledPercentage >= 0.99) {
+    if(allowToRequestPosts)
+        fetch_post(1,'');
+  }
+});
     </script>
 </body>
 </html>

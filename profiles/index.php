@@ -4,8 +4,8 @@ if (isset($_COOKIE['userID'])) {
 }
 else{
     $mainBtnFunction = "showSignUpLogInForm('../')";
-
 }
+$folderLoc = '../';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -83,9 +83,7 @@ else{
                         if(profile.facebook != null)
                         str +=`<a href="${profile.facebook}" class="fab fa-facebook"></a>`
                      str +=`</ul>
-                    <form class="controls" id="followForm_${profile.ID}" onsubmit="${followFunction(profile.isFollowed,profile.isFollowing)}('${profile.ID}')">
-                        <input type="hidden" value="${profile.ID}" name="fID">
-                        <input type="hidden" value="<?php  echo $MyData['ID']?>" name="id">
+                    <form class="controls" id="followForm_${profile.ID}" data-address="${followAddress(profile.isFollowed,profile.isFollowing)}" onsubmit="followHim('<?php echo $folderLoc;?>','${profile.ID}',this.dataset.address)">
                         <button type="submit" class="dangerButton" style="width:100%;">${followText(profile.isFollowed,profile.isFollowing)}</button>
                     </form>
                     </div>
@@ -96,26 +94,7 @@ else{
             deActiveForms();
         }
         fetch_all_profiles();
-        function followText(isFollowed,isFollowing){
-            if(isFollowed && isFollowing)
-                return "Unfriend";
-            else if(isFollowed == 0 && isFollowing == 1)
-                return "Unfollow";
-            else if(isFollowing == 0 && isFollowed == 1)
-                return "Follow Back";
-            else 
-                return "Follow";
-        }
-         function followFunction(isFollowed,isFollowing){
-            if(isFollowed && isFollowing)
-                return "unfollowHim";
-            else if(isFollowed == 0 && isFollowing == 1)
-                return "unfollowHim";
-            else if(isFollowing == 0 && isFollowed == 1)
-                return "followHim";
-            else 
-                return "followHim";
-        }
+        
         
 
 
@@ -134,32 +113,12 @@ function shareProfile(id,name) {
   }
 }
 
-function followHim(id){
-            console.log(id)
-            $.ajax({
-                url: '../PHP/followHim.php',
-                method: 'POST',
-                data: $(`#followForm_${id}`).serialize(),
-                success: (data => {
-                    fetch_all_profiles();
-                })
-            })
-        }
-        function unfollowHim(id){
-            console.log(id)
-            $.ajax({
-                url: '../PHP/unFollowHim.php',
-                method: 'POST',
-                data: $(`#followForm_${id}`).serialize(),
-                success: (data => {
-                    fetch_all_profiles();
-                })
-            })
-        }
+
 
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="../nav.js"></script>
+    <script src="../follow.js"></script>
     <script src="../formDeactivator.js"></script>
 </body>
 </html>

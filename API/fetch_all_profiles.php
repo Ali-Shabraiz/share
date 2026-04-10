@@ -5,7 +5,7 @@ if(isset($_COOKIE['userID'])){
     $id = $_COOKIE['userID'];
     $tableName = 'follow_'.$id;
     $result = $conn->query("SELECT ID,name,email,nickName,follower,following,likes,friends,sharedLinks,bio,img,whatsapp,facebook,instagram,tiktok,youtube FROM user WHERE ID != '$id' ORDER BY dateOrder");
-$rows = [];
+    $rows = [];
 while($row = $result->fetch_assoc()) {
     $fID = $row['ID'];
     $row['scores'] = $row['follower']*5 + $row['following']*2+$row['likes']*8+$row['friends']*10+$row['sharedLinks']*15;

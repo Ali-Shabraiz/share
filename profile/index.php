@@ -223,7 +223,7 @@ else{
     <script>
          function updateProductbasic(){
             let form = document.getElementById(`personalInfoForm`);
-            let formData = new FormData(form);   // includes name + slug + file
+            let formData = new FormData(form);    // includes name + slug + file
             console.log(formData)
 
             $.ajax({
