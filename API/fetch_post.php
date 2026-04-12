@@ -8,7 +8,9 @@ if(isset($_COOKIE['userID'])){
     }
     $userID = $_COOKIE['userID'];
     $viewPosts = [];
-    if(isset($_GET['firstReq'])){
+    
+    if(!isset($_GET['likePage'])){
+        if(isset($_GET['firstReq'])){
             $viewPosts = ['dummy_id'];
             $storeViewedPostInJSON = "['dummy_id']";
             $stmt = $conn->prepare("UPDATE user SET viewedPosts = ?  WHERE ID = ? limit 1");
@@ -24,19 +26,38 @@ if(isset($_COOKIE['userID'])){
         $viewPosts = json_decode($row['viewedPosts']);
         
         }
+    }
+    else {
+            $viewPosts = "['dummy_id']";
+            $likeTable = "like_".$userID;
+        
+    }
+    if(!isset($_GET['likePage'])){
         $viewPostsimplode = "'" . implode("','", $viewPosts) . "'";
-        $result = $conn->query("SELECT ID, type, uploadedBy,likes FROM posts WHERE ID NOT IN ($viewPostsimplode)   ORDER BY RAND() DESC LIMIT 5");
+        $result = $conn->query("SELECT ID, type, uploadedBy,likes FROM posts WHERE ID NOT IN ($viewPostsimplode) AND ID !=  '$userID' AND uploadedBy != '$userID' ORDER BY RAND() LIMIT 5");
+    }
+    else {
+        $result = $conn->query("SELECT liked as ID, type FROM `$likeTable` WHERE isMe = 1 ORDER BY RAND()");
+
+    }
         $rows = [];
     while($row = $result->fetch_assoc()) {
-        $uploadedBy = $row['uploadedBy'];
-        $tableName = 'post_'.$uploadedBy;
+       
         $postID = $row['ID'];
+        if(isset($_GET['likePage'])){
+        $result4 = $conn->query("SELECT likes,uploadedBy FROM posts WHERE ID = '$postID' LIMIT 1");
+        $row4 = $result4->fetch_assoc();
+        $row['likes'] = $row4['likes'];
+        $row['uploadedBy'] = $row4['uploadedBy'];
+        } else {
         $viewPosts[] = $postID;
         $storeViewedPostInJSON = json_encode($viewPosts);
         $stmt = $conn->prepare("UPDATE user SET viewedPosts = ?  WHERE ID = ? limit 1");
         $stmt->bind_param("ss", $storeViewedPostInJSON,$userID);
         $stmt->execute();
-
+        }
+        $uploadedBy = $row['uploadedBy'];
+        $tableName = 'post_'.$uploadedBy;
         $row['postID'] = generateUserID();
         $result1 = $conn->query("SELECT data,name,message,date FROM `$tableName`  WHERE ID = '$postID' ORDER BY RAND()  LIMIT 1");
         $row1 = $result1->fetch_assoc();
@@ -75,16 +96,17 @@ if(isset($_COOKIE['userID'])){
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("s", $postID);
         $stmt->execute();
-        $result = $stmt->get_result();
-        $row3 = $result->fetch_assoc();
-        if($result->num_rows > 0)
+        $result2 = $stmt->get_result();
+        $row3 = $result2->fetch_assoc();
+        if($result2->num_rows > 0)
             $row['likebyMe'] = $row3['isMe'];
         else
             $row['likebyMe'] = 0;
+        
         $rows[] = $row;
-       
-
     }
+    
+   
 echo json_encode($rows);
 $conn->close();
 

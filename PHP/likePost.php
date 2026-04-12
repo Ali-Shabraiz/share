@@ -14,14 +14,25 @@ $likeID = generateUserID();
 if(isset($_COOKIE['userID'])){
     $userID = $_COOKIE['userID'];
     $postID = $_POST['postID'];
-    $stmt = $conn->prepare("SELECT * FROM posts WHERE ID = ? LIMIT 1");
+    if(!isset($_GET['profile']))
+    $stmt = $conn->prepare("SELECT type,uploadedBy FROM posts WHERE ID = ? LIMIT 1");
+    else {
+        $stmt = $conn->prepare("SELECT ID FROM user WHERE ID = ? LIMIT 1");
+    }
     $stmt->bind_param("s", $postID);
     $stmt->execute();
     $result = $stmt->get_result();
     $row = $result->fetch_assoc();
     if($result->num_rows > 0){
+        if(!isset($_GET['profile'])){
         $uploadedBy = $row['uploadedBy'];
         $type = $row['type'];
+        }
+        else{
+        $uploadedBy = $postID;
+        $type = 0;
+        }
+        
         $tableName1 = 'like_'.$userID;
         $tableName2 = 'like_'.$uploadedBy;
         $sql = "SELECT ID,liked,likedBy FROM `$tableName1` WHERE likedBy = ? AND liked = ?";

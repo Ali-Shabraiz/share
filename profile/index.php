@@ -227,7 +227,7 @@ else{
             console.log(formData)
 
             $.ajax({
-                url: "./PHP/updateProfilePersonal.php",
+                url: "../PHP/updateProfilePersonal.php",
                 type: "POST",
                 data: formData,
                 processData: false,   // don't convert FormData to string
@@ -245,7 +245,7 @@ else{
         }
         function updateBasicInfo(id){
             $.ajax({
-                url: "./PHP/updateProfileBasic.php",
+                url: "../PHP/updateProfileBasic.php",
                  type: 'POST',
                 data: $(`#${id}`).serialize(),
                 success: (data => {
@@ -255,7 +255,7 @@ else{
         }
         function updateSocialAccounts(id){
             $.ajax({
-                url: "./PHP/updateSocialAccounts.php",
+                url: "../PHP/updateSocialAccounts.php",
                  type: 'POST',
                 data: $(`#${id}`).serialize(),
                 success: (data => {
@@ -269,7 +269,7 @@ else{
         <?php echo $JSUserIDStatement;?>
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="./formDeactivator.js"></script>
-    <script src="./nav.js"></script>
+    <script src="../formDeactivator.js"></script>
+    <script src="../nav.js"></script>
 </body>
 </html>

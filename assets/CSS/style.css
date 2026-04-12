@@ -17,8 +17,9 @@ nav .logo {
     display: flex;
     gap: 5px;
     align-items: center;
-
+    
 }
+
 
 nav .logo .icon {
     width: 32px;

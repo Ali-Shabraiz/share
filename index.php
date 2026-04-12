@@ -1,11 +1,14 @@
 <?php 
-if (isset($_COOKIE['userID'])) {
+if(!isset($likedPage)){
+    $likedPage = 0;
+    if (isset($_COOKIE['userID'])) {
     $logoutBtn = '<button class="logOutBtn fa fa-sign-out" onclick="accountlogOut(`./`)"></button>';
 }
 else{
     $mainBtnFunction = "showSignUpLogInForm('./')";
 }
 $folderLoc = './';
+}
 ?>
 
 <!DOCTYPE html>
@@ -14,15 +17,15 @@ $folderLoc = './';
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
     integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
     crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="./assets/CSS/globalVariables.css">
-    <link rel="stylesheet" href="./assets/CSS/style.css">
+    <link rel="stylesheet" href="<?php echo $folderLoc?>assets/CSS/globalVariables.css">
+    <link rel="stylesheet" href="<?php echo $folderLoc?>assets/CSS/style.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://unpkg.com/qr-code-styling/lib/qr-code-styling.js"></script>
-    <link rel="stylesheet" href="./assets/CSS/globalVariables.css">
+    <link rel="stylesheet" href="<?php echo $folderLoc?>assets/CSS/globalVariables.css">
     <script async src="https://www.tiktok.com/embed.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="./follow.js"></script>
+    <script src="<?php echo $folderLoc?>follow.js"></script>
     <title>Home - Share</title>
     <style>
       body{
@@ -455,9 +458,9 @@ $folderLoc = './';
 </head>
 <body>
     <div class="main">
-         <?php include "./assets/components/nav.php";?>
+         <?php include $folderLoc."assets/components/nav.php";?>
          <div class="content">
-            <?php include "./assets/components/aside.php";?>
+            <?php include $folderLoc."assets/components/aside.php";?>
             <div class="info">
                 <div class="posts">
                     <div class="postContainer" id="postContainer"></div>
@@ -472,7 +475,7 @@ $folderLoc = './';
             </div>
          </div>
     </div>
-    <script src="./nav.js"></script>
+    <script src="<?php echo $folderLoc?>nav.js"></script>
     <script>
          function shareProfile(text,name) {
   if (navigator.share) {
@@ -489,7 +492,7 @@ $folderLoc = './';
   }
 }
        function fetch_top_five(){
-            fetch('./API/fetch_top_profiles.php').then(res => {
+            fetch('<?php echo $folderLoc?>API/fetch_top_profiles.php<?php echo ($likedPage) ? '?likePage=1':''?>').then(res => {
                 return res.json();
             }).then(data => {
                 displayTopProfiles(data);
@@ -506,13 +509,13 @@ $folderLoc = './';
                 row.innerHTML = `
                     <div class="personalData">
                             <div class="img">
-                            <img src="./assets/image/${profile.img}">
+                            <img src="<?php echo $folderLoc?>assets/image/${profile.img}">
                             <span class="fa fa-user-plus"></span>
                             </div>
                             <h5>${profile.name}</h5>
                             <h6>${profile.email}</h6>
                         </div>
-                        <button>${followText(profile.isFollowed,profile.isFollowing)}</button>
+                        <button class="postFollowBtn${profile.ID}" data-address="${followAddress(profile.isFollowed,profile.isFollowing)}" onclick="followHim('<?php echo $folderLoc?>','${profile.ID}',this.dataset.address,'postAfterFollow')">${followText(profile.isFollowed,profile.isFollowing)}</button>
                 `;
                 profileContainer.append(row);
 
@@ -523,21 +526,21 @@ $folderLoc = './';
             let friendsImg =  document.getElementById('friendsImg');
             for(i=0;i<3;i++){
                 let img = document.createElement('img');
-                img.src = `./assets/image/${data[i].img}`;
+                img.src = `<?php echo $folderLoc?>assets/image/${data[i].img}`;
                 friendsImg.append(img);
 }
         
         }
         function fetch_post(scrolled,firstReq){
             allowToRequestPosts = 0;
-            fetch(`./API/fetch_post.php${firstReq}`).then(res => {
+            fetch(`<?php echo $folderLoc?>API/fetch_post.php${firstReq}`).then(res => {
                 return res.json()
             }).then(data => {
                 displayPosts(data,!scrolled);
                 allowToRequestPosts = 1;
             })
         }
-        fetch_post(0,'?firstReq=1');
+        fetch_post(0,'?firstReq=1<?Php echo ($likedPage) ? "&likePage=1":"";?>');
         function displayPosts(data,scrolled){
             let postContainer = document.getElementById('postContainer');
             if(scrolled)
@@ -548,12 +551,12 @@ $folderLoc = './';
                 singlePost.innerHTML = `
                             <div class="uploadedBy">
                             <section>
-                                <img src="./assets/image/${post.img}" alt="">
+                                <img src="<?php echo $folderLoc?>assets/image/${post.img}" alt="">
                                 <h5>${post.name}</h5>
                                 <h6 class="grayText">${post.date}</h6>
                             </section>
                             <section>
-                                <button onclick="followHim('<?php echo $folderLoc?>','${post.uID}')">${followText(post.isFollowed,post.isFollowing)}</button>
+                                <button class="postFollowBtn${post.uID}" data-address="${followAddress(post.isFollowed,post.isFollowing)}" onclick="followHim('<?php echo $folderLoc?>','${post.uID}',this.dataset.address,'postAfterFollow')">${followText(post.isFollowed,post.isFollowing)}</button>
                                 <span class="fa fa-ellipsis"></span>
                             </section>
                         </div>
@@ -570,7 +573,6 @@ $folderLoc = './';
                         
                 `;
                 postContainer.append(singlePost);
-                console.log(post.isFollowing)
                 displaySwitch(post,post.type);
             })
         }
@@ -597,7 +599,7 @@ qrCode.append(document.getElementById(`qrcode${data.postID}`));
 
         function likeIt(postID){
             $.ajax({
-                url: './PHP/likePost.php',
+                url: '<?php echo $folderLoc?>PHP/likePost.php',
                 method: 'POST',
                 data: {postID: postID},
                 success: (data => {
@@ -612,7 +614,6 @@ qrCode.append(document.getElementById(`qrcode${data.postID}`));
         }
         
         function displaySwitch(data,type){
-            
             if(type == 1){
                 displayWACard(data);
                 genrateQR(data);
@@ -628,11 +629,11 @@ qrCode.append(document.getElementById(`qrcode${data.postID}`));
         }
         function displayImage(data){
              document.getElementById(`postData${data.postID}`).innerHTML = `
-                <img src="./assets/image/${data.data}">
+                <img src="<?php echo $folderLoc?>assets/image/${data.data}">
              `
         }
         function displayWACard(data){
-            document.getElementById(`postData${data.postID}`).innerHTML = ` <div class="WACard postCard" style="--clr: #25D366"><img  src="./assets/image/noProfile0.png" class="profilePic" width="50">
+            document.getElementById(`postData${data.postID}`).innerHTML = ` <div class="WACard postCard" style="--clr: #25D366"><img  src="<?php echo $folderLoc?>assets/image/noProfile0.png" class="profilePic" width="50">
                     <i onclick="shareProfile('https://wa.me/${data.data}','${data.dataName}')" class="fa fa-share"></i>
                     <h3>${data.dataName}</h3>
                     <div class="qrcode" id="qrcode${data.postID}">
@@ -668,7 +669,7 @@ qrCode.append(document.getElementById(`qrcode${data.postID}`));
             document.getElementById(`postData${data.postID}`).innerHTML = `<div class="insta-card postCard">
              <i onclick="shareProfile('https://instagram.com/${data.data}','${data.dataName}')" class="fa fa-share"></i>
                         <h3>${data.dataName}</h3>
-                        <div class="qrcode" style="--bg: url('./assets/qrImg/qr_${data.ID}.jpg');">
+                        <div class="qrcode" style="--bg: url('<?php echo $folderLoc?>assets/qrImg/qr_${data.ID}.jpg');">
                             <a class="number" href="https://instagram.com/${data.data}" style="background: 
                             radial-gradient(circle at 30% 107%,
                              #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
@@ -685,19 +686,18 @@ qrCode.append(document.getElementById(`qrcode${data.postID}`));
         }
 
         var allowToRequestPosts = 1;
+        <?php if(!$likedPage){?>
         window.addEventListener("scroll", () => {
   const scrollTop = window.scrollY;
   const windowHeight = window.innerHeight;
   const documentHeight = document.documentElement.scrollHeight;
-
   const scrolledPercentage = (scrollTop + windowHeight) / documentHeight;
-
-  console.log(scrolledPercentage)
   if (scrolledPercentage >= 0.99) {
     if(allowToRequestPosts)
         fetch_post(1,'');
   }
 });
+  <?php }?>
     </script>
 </body>
 </html>

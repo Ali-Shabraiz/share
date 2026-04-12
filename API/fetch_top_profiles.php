@@ -4,10 +4,24 @@ header("Content-Type: application/json; charset=UTF-8");
 if(isset($_COOKIE['userID'])){
     $id = $_COOKIE['userID'];
     $tableName = 'follow_'.$id;
+    $likTableName = 'like_'.$id;
+    if(!isset($_GET['likePage']))
     $result = $conn->query("SELECT ID,name,email,img,(follower*5 + following*2 + likes*8 + friends*10 + sharedLinks*15) AS scores FROM user WHERE ID != '$id' ORDER BY scores DESC LIMIT 7");
-$rows = [];
-while($row = $result->fetch_assoc()) {
+    else{
+    $result = $conn->query("SELECT liked as ID FROM `$likTableName` WHERE type = 0 AND isMe = 1");
+    
+    }
+    $rows = [];
+    while($row = $result->fetch_assoc()) {
     $fID = $row['ID'];
+    if(!isset($_GET['likePage'])){
+        $result2 = $conn->query("SELECT name,email,img,(follower*5 + following*2 + likes*8 + friends*10 + sharedLinks*15) AS scores FROM user WHERE ID != '$id' AND ID = '$fID' ORDER BY scores DESC LIMIT 1");
+        $row2 = $result2->fetch_assoc();
+        $row['name'] = $row2['name'];
+        $row['email'] = $row2['email'];
+        $row['img'] = $row2['img'];
+        $row['scores'] = $row2['scores'];
+    }
     // $row['scores'] = $row['follower']*5 + $row['following']*2+$row['likes']*8+$row['friends']*10+$row['sharedLinks']*15;
     $sql = "SELECT follower,following FROM `$tableName` WHERE fID = ? LIMIT 1";
     $stmt = $conn->prepare($sql);
@@ -30,7 +44,12 @@ while($row = $result->fetch_assoc()) {
     
     $rows[] = $row;
 }
+    if(empty($rows)){
+        $rows['code'] = 404;
+        $rows['message'] = 'No liked Profile Found';
+    }
 echo json_encode($rows);
+if(!isset($_GET['likePage']))
 $stmt->close();
 $conn->close();
 }

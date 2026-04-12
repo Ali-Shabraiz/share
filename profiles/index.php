@@ -10,14 +10,7 @@ $folderLoc = '../';
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <style>
-        
-        
-        
-       
-
-        
-    </style>
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
         integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -26,6 +19,18 @@ $folderLoc = '../';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profiles</title>
+    <style>
+        
+        
+        
+       
+.activeLiked{
+    background : red !important;
+    color: var(--wte) !important;
+    
+}
+        
+    </style>
 </head>
 <body>
     <form class="logIn" id="signUpLogInForm" onsubmit="logInSignUpFormAJAX(rootofSignLogForm)"></form>
@@ -62,14 +67,14 @@ $folderLoc = '../';
                         <a href="mailto:${profile.email}" class="grayText">${profile.email}</a>
                     </div>
                     <ul class="scores">
-                        <li><h6>Followers</h6><span>${profile.follower}</span></li>
-                        <li><h6>Following</h6><span>${profile.following}</span></li>
-                        <li><h6>Friends</h6><span>${profile.friends}</span></li>
-                        <li><h6>Likes</h6><span>${profile.likes}</span></li>
-                        <li><h6>Scores</h6><span>${profile.scores}</span></li>
+                        <li><h6>Followers</h6><span id="followersNumber${profile.ID}">${profile.follower}</span></li>
+                        <li><h6>Following</h6><span id="followingNumber${profile.ID}">${profile.following}</span></li>
+                        <li><h6>Friends</h6><span id="friendNumber${profile.ID}">${profile.friends}</span></li>
+                        <li><h6>Likes</h6><span id="likeNumber${profile.ID}">${profile.likes}</span></li>
+                        <li><h6>Scores</h6><span id="scoresNumber${profile.ID}">${profile.scores}</span></li>
                     </ul>
                     <ul class="social-links">
-                        <i class="far fa-heart"></i>
+                        <i class="far fa-heart" id="likeBtn${profile.ID}" onclick="likeIt('${profile.ID}')"></i>
                         <a href="../profile/?id=${profile.ID}" class="fa fa-share"></a>
                         `;
                         if(profile.whatsapp != null)
@@ -83,8 +88,8 @@ $folderLoc = '../';
                         if(profile.facebook != null)
                         str +=`<a href="${profile.facebook}" class="fab fa-facebook"></a>`
                      str +=`</ul>
-                    <form class="controls" id="followForm_${profile.ID}" data-address="${followAddress(profile.isFollowed,profile.isFollowing)}" onsubmit="followHim('<?php echo $folderLoc;?>','${profile.ID}',this.dataset.address)">
-                        <button type="submit" class="dangerButton" style="width:100%;">${followText(profile.isFollowed,profile.isFollowing)}</button>
+                    <form class="controls" id="followForm_${profile.ID}" data-address="${followAddress(profile.isFollowed,profile.isFollowing)}" onsubmit="followHim('<?php echo $folderLoc;?>','${profile.ID}',this.dataset.address,'profilesAfterFollow')">
+                        <button type="submit" class="dangerButton" style="width:100%;" id="followBtn${profile.ID}">${followText(profile.isFollowed,profile.isFollowing)}</button>
                     </form>
                     </div>
                     `;
@@ -113,6 +118,21 @@ function shareProfile(id,name) {
   }
 }
 
+ function likeIt(postID){
+            $.ajax({
+                url: '../PHP/likePost.php?profile=1',
+                method: 'POST',
+                data: {postID: postID},
+                success: (data => {
+                    if(data.condition)
+                    document.getElementById(`likeBtn${postID}`).classList.replace('far','fa');
+                    else
+                    document.getElementById(`likeBtn${postID}`).classList.replace('fa','far');
+                    document.getElementById(`likeBtn${postID}`).style.background = `var(data.color)`;
+                    
+                })
+            })
+        }
 
 
     </script>
