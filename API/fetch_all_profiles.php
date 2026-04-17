@@ -4,6 +4,7 @@ header("Content-Type: application/json; charset=UTF-8");
 if(isset($_COOKIE['userID'])){
     $id = $_COOKIE['userID'];
     $tableName = 'follow_'.$id;
+    $likeTableName = 'like_'.$id;
     $result = $conn->query("SELECT ID,name,email,nickName,follower,following,likes,friends,sharedLinks,bio,img,whatsapp,facebook,instagram,tiktok,youtube FROM user WHERE ID != '$id' ORDER BY dateOrder");
     $rows = [];
 while($row = $result->fetch_assoc()) {
@@ -27,6 +28,17 @@ while($row = $result->fetch_assoc()) {
         $row['isFollowing'] = 0;
         $row['isFriend'] = 0;
     }
+
+    $sql = "SELECT isMe FROM `$likeTableName` WHERE liked = ? AND type = 0 AND isMe = 1 LIMIT 1";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $fID);
+    $stmt->execute();
+    $result1 = $stmt->get_result();
+    $row1 = $result1->fetch_assoc();
+    if($result1->num_rows)
+    $row['likedByMe'] = $row1['isMe'];
+else
+    $row['likedByMe'] = 0;
     
     $rows[] = $row;
 }

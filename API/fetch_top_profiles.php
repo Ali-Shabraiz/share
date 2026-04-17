@@ -4,17 +4,17 @@ header("Content-Type: application/json; charset=UTF-8");
 if(isset($_COOKIE['userID'])){
     $id = $_COOKIE['userID'];
     $tableName = 'follow_'.$id;
-    $likTableName = 'like_'.$id;
+    $likeTableName = 'like_'.$id;
     if(!isset($_GET['likePage']))
     $result = $conn->query("SELECT ID,name,email,img,(follower*5 + following*2 + likes*8 + friends*10 + sharedLinks*15) AS scores FROM user WHERE ID != '$id' ORDER BY scores DESC LIMIT 7");
     else{
-    $result = $conn->query("SELECT liked as ID FROM `$likTableName` WHERE type = 0 AND isMe = 1");
+    $result = $conn->query("SELECT liked as ID FROM `$likeTableName` WHERE type = 0 AND isMe = 1");
     
     }
     $rows = [];
     while($row = $result->fetch_assoc()) {
     $fID = $row['ID'];
-    if(!isset($_GET['likePage'])){
+    if(isset($_GET['likePage'])){
         $result2 = $conn->query("SELECT name,email,img,(follower*5 + following*2 + likes*8 + friends*10 + sharedLinks*15) AS scores FROM user WHERE ID != '$id' AND ID = '$fID' ORDER BY scores DESC LIMIT 1");
         $row2 = $result2->fetch_assoc();
         $row['name'] = $row2['name'];
@@ -41,6 +41,18 @@ if(isset($_COOKIE['userID'])){
         $row['isFollowing'] = 0;
         $row['isFriend'] = 0;
     }
+
+    $sql = "SELECT isMe FROM `$likeTableName` WHERE liked = ? AND type = 0 AND isMe = 1 LIMIT 1";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $fID);
+    $stmt->execute();
+    $result1 = $stmt->get_result();
+    $row1 = $result1->fetch_assoc();
+    if($result1->num_rows)
+    $row['likedByMe'] = $row1['isMe'];
+else
+    $row['likedByMe'] = 0;
+    
     
     $rows[] = $row;
 }

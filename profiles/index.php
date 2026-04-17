@@ -18,6 +18,8 @@ $folderLoc = '../';
     <link rel="stylesheet" href="../assets/CSS/globalVariables.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="../follow.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <title>Profiles</title>
     <style>
         
@@ -74,7 +76,7 @@ $folderLoc = '../';
                         <li><h6>Scores</h6><span id="scoresNumber${profile.ID}">${profile.scores}</span></li>
                     </ul>
                     <ul class="social-links">
-                        <i class="far fa-heart" id="likeBtn${profile.ID}" onclick="likeIt('${profile.ID}')"></i>
+                        <i class="${(profile.likedByMe) ? 'fa' : 'far'} fa-heart" id="likeBtn${profile.ID}" onclick="likeIt('${profile.ID}')"></i>
                         <a href="../profile/?id=${profile.ID}" class="fa fa-share"></a>
                         `;
                         if(profile.whatsapp != null)
@@ -124,11 +126,16 @@ function shareProfile(id,name) {
                 method: 'POST',
                 data: {postID: postID},
                 success: (data => {
+                    console.log(data)
                     if(data.condition)
                     document.getElementById(`likeBtn${postID}`).classList.replace('far','fa');
                     else
                     document.getElementById(`likeBtn${postID}`).classList.replace('fa','far');
-                    document.getElementById(`likeBtn${postID}`).style.background = `var(data.color)`;
+
+                    document.getElementById(`likeNumber${postID}`).textContent = data.likes;
+                    document.getElementById(`scoresNumber${postID}`).textContent = Number(document.getElementById(`scoresNumber${postID}`).innerText) + data.scores;
+
+                    
                     
                 })
             })
@@ -136,9 +143,8 @@ function shareProfile(id,name) {
 
 
     </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="../nav.js"></script>
-    <script src="../follow.js"></script>
     <script src="../formDeactivator.js"></script>
+    <script src="../nav.js"></script>
+
 </body>
 </html>

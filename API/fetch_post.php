@@ -37,7 +37,7 @@ if(isset($_COOKIE['userID'])){
         $result = $conn->query("SELECT ID, type, uploadedBy,likes FROM posts WHERE ID NOT IN ($viewPostsimplode) AND ID !=  '$userID' AND uploadedBy != '$userID' ORDER BY RAND() LIMIT 5");
     }
     else {
-        $result = $conn->query("SELECT liked as ID, type FROM `$likeTable` WHERE isMe = 1 ORDER BY RAND()");
+        $result = $conn->query("SELECT liked as ID, type FROM `$likeTable` WHERE isMe = 1 AND type != 0 ORDER BY RAND()");
 
     }
         $rows = [];
@@ -47,8 +47,10 @@ if(isset($_COOKIE['userID'])){
         if(isset($_GET['likePage'])){
         $result4 = $conn->query("SELECT likes,uploadedBy FROM posts WHERE ID = '$postID' LIMIT 1");
         $row4 = $result4->fetch_assoc();
+        
         $row['likes'] = $row4['likes'];
         $row['uploadedBy'] = $row4['uploadedBy'];
+        
         } else {
         $viewPosts[] = $postID;
         $storeViewedPostInJSON = json_encode($viewPosts);

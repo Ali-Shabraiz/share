@@ -97,7 +97,10 @@ $folderLoc = './';
             flex-direction: column;
             flex-wrap: wrap;
         }
-        .accountsAndLinks .profileRow .fa-user-plus{
+        .accountsAndLinks .profileRow .fa-user-plus,
+        .content .info .accountsAndLinks .profiles .profileRow .personalData .fa-heart
+        
+        {
             display: none;
         }
         .accountsAndLinks .profileRow button,
@@ -421,11 +424,12 @@ $folderLoc = './';
             width: 75px;
             height: 75px;
         }
-        .content .info .accountsAndLinks .profiles .profileRow .personalData .fa-user-plus{
+        .content .info .accountsAndLinks .profiles .profileRow .personalData .fa-user-plus,
+        .content .info .accountsAndLinks .profiles .profileRow .personalData .fa-heart
+
+        {
             position: absolute;
             display: block;
-            
-            
             bottom: 5px;
             width: 40px;
             height: 20px;
@@ -510,13 +514,25 @@ $folderLoc = './';
                     <div class="personalData">
                             <div class="img">
                             <img src="<?php echo $folderLoc?>assets/image/${profile.img}">
+                        <?php if(!$likedPage){?>
                             <span class="fa fa-user-plus"></span>
+                        <?php } else {?>
+                            <span class="fa fa-heart"></span>
+
+                        <?php }?>
                             </div>
                             <h5>${profile.name}</h5>
                             <h6>${profile.email}</h6>
                         </div>
+                        <?php if(!$likedPage){?>
                         <button class="postFollowBtn${profile.ID}" data-address="${followAddress(profile.isFollowed,profile.isFollowing)}" onclick="followHim('<?php echo $folderLoc?>','${profile.ID}',this.dataset.address,'postAfterFollow')">${followText(profile.isFollowed,profile.isFollowing)}</button>
-                `;
+                        <?php } else {?>
+                        <button class="${profile.likedByMe ? 'fa': 'far'}  fa-heart" style="font-size:1.2em;color: var(--heartRed)" onclick="likeIt('${profile.ID}')"></button>
+                        <?php  }?>
+
+                            
+                            
+                        `;
                 profileContainer.append(row);
 
             })
