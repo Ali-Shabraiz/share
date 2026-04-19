@@ -457,8 +457,6 @@ else{
             var container = document.getElementById(`commentBox`);
             container.innerHTML = '';
             if(data.code == 200){
-                document.getElementById('commentForm').dataset.postid = id;
-                document.getElementById('commentFormHidden').value = id;
                 data.message.forEach(comit => {
                     let commentDiv = document.createElement('div');
             commentDiv.classList.add('singleComment');
@@ -746,6 +744,8 @@ qrCode.append(document.getElementById(`qrcode${data.postID}`));
             // Get active slide video
             const activeVideo = document.querySelector('.swiper-slide-active video');
             if (activeVideo) {
+                document.getElementById('commentForm').dataset.postid = activeVideo.dataset.postid;
+                document.getElementById('commentFormHidden').value = activeVideo.dataset.postid;
                 fetch_comments(activeVideo.dataset.postid,isCommentsSectionDisplayed);
                 activeVideo.play();
                 paused = false;
