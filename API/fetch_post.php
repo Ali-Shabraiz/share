@@ -8,9 +8,21 @@ if(isset($_COOKIE['userID'])){
     }
     $userID = $_COOKIE['userID'];
     $viewPosts = [];
+    if(isset($_GET['reelPage']))
+        $reelPage = 1;
+    else
+        $reelPage = 0;
+
+    if(isset($_GET['firstReq'])){
+        $firstReq = 1;
+    }
+    else 
+        $firstReq = 0;
+
+    emptyLoadAgain:
     
     if(!isset($_GET['likePage'])){
-        if(isset($_GET['firstReq'])){
+        if($firstReq){
             $viewPosts = ['dummy_id'];
             $storeViewedPostInJSON = "['dummy_id']";
             $stmt = $conn->prepare("UPDATE user SET viewedPosts = ?  WHERE ID = ? limit 1");
@@ -34,7 +46,10 @@ if(isset($_COOKIE['userID'])){
     }
     if(!isset($_GET['likePage'])){
         $viewPostsimplode = "'" . implode("','", $viewPosts) . "'";
-        $result = $conn->query("SELECT ID, type, uploadedBy,likes FROM posts WHERE ID NOT IN ($viewPostsimplode) AND ID !=  '$userID' AND uploadedBy != '$userID' ORDER BY RAND() LIMIT 5");
+        (!$reelPage) ? 
+        $result = $conn->query("SELECT ID, type, uploadedBy,likes FROM posts WHERE ID NOT IN ($viewPostsimplode) AND ID !=  '$userID' AND uploadedBy != '$userID' ORDER BY RAND() LIMIT 5")
+        :
+        $result = $conn->query("SELECT ID, type, uploadedBy,likes FROM posts WHERE ID NOT IN ($viewPostsimplode) AND type = 6 AND ID !=  '$userID' AND uploadedBy != '$userID' ORDER BY RAND() LIMIT 5");
     }
     else {
         $result = $conn->query("SELECT liked as ID, type FROM `$likeTable` WHERE isMe = 1 AND type != 0 ORDER BY RAND()");
@@ -106,6 +121,11 @@ if(isset($_COOKIE['userID'])){
             $row['likebyMe'] = 0;
         
         $rows[] = $row;
+    }
+   
+    if(empty($rows)){
+        $firstReq = 1;
+        goto emptyLoadAgain;
     }
     
    

@@ -233,12 +233,42 @@ else{
 }
 
 
-/* Hide original QR visually (but keep for mask) */
+.swiper {
+      width: 100%;
+      height: 100%;
+    
+      /* overflow: visible !important; */
 
+      
+    }
 
-/* Gradient layer */
+    .swiper-slide {
+      text-align: center;
+      font-size: 18px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 200px;
+      position: relative;
+      /* padding: 10px 0; */
+      margin-top: 10px;
+    }
+
+    .swiper-slide img {
+      display: block;
+      /* width: auto; */
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 20px;
+    }
+    .swiper-pagination-bullet:not(.swiper-pagination-bullet-active){
+        background: var(--wte) !important;
+        opacity: 0.8;
+    }
 
     </style>
+     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.css" />
     <script src="https://unpkg.com/qr-code-styling/lib/qr-code-styling.js"></script>
 </head>
 <body>
@@ -255,6 +285,13 @@ else{
             <div class="instagramCardsContainer cardsContainer" id="instagramCardsContainer"></div>
             <h2>TikTok</h2>
             <div class="TikTokCardsContainer cardsContainer" id="TikTokCardsContainer"></div>
+            <h2>Images</h2>
+            <div class="swiper mySwiper">
+    <div class="swiper-wrapper" id="imagesContainer">
+      <div class="swiper-slide"><img src="../assets/image/bili.jpeg" alt=""></div>
+    </div>
+    <div class="swiper-pagination"></div>
+  </div>
             <h2>Upload</h2>
             <div class="container whatsAppCardsContainer">
                 <label for="addFormCheck" onclick="getAddForm('WhatsApp')"><h3>Add WhatsApp</h3><span class="fa fa-plus"></span></label>
@@ -262,6 +299,7 @@ else{
                 <label for="addFormCheck" onclick="getAddForm('Instagram')"><h3>Add Instagram</h3><span class="fa fa-plus"></span></label>
                 <label for="addFormCheck" onclick="getAddForm('Tiktok')"><h3>Add TikTok</h3><span class="fa fa-plus"></span></label>
                 <label for="addFormCheck" onclick="getAddForm('Image')"><h3>Add Image</h3><span class="fa fa-plus"></span></label>
+                <label for="addFormCheck" onclick="getAddForm('Video')"><h3>Add Video</h3><span class="fa fa-plus"></span></label>
             </div>
 
         </div>
@@ -353,6 +391,7 @@ function uploadPost(id){
                 displayFBAccounts(data.filter(pro => pro.type == 2));
                 displayInsAccounts(data.filter(pro => pro.type == 4));
                 displayTiktokAccounts(data.filter(pro => pro.type == 3));
+                displayImages(data.filter(pro => pro.type == 5));
             })
         }
         fetch_all_myPosts();
@@ -470,6 +509,21 @@ qrCode.append(document.getElementById(`qrcode${profile.ID}`));
 
            })
         }
+        function displayImages(data){
+            let container = document. getElementById('imagesContainer');
+             container.innerHTML = '';
+           data.forEach(image => {
+            let card = document.createElement('div');
+            card.classList.add('card')
+            card.classList.add('swiper-slide');
+            card.style.setProperty('--clr','#1877F2')
+            card.innerHTML = `
+            <i onclick="deletePost('${image.ID}')" class="fa fa-trash deletePostBtn"></i>
+            <img src="../assets/image/${image.data}" alt="">`;
+            container.appendChild(card);
+        })
+       
+}
         
          function displayFBAccounts(data){
              let container = document. getElementById('facebookCardsContainer');
@@ -513,5 +567,18 @@ qrCode.append(document.getElementById(`qrcode${profile.ID}`));
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="../formDeactivator.js"></script>
+     <script src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js"></script>
+
+  <!-- Initialize Swiper -->
+  <script>
+     var swiper = new Swiper(".mySwiper", {
+      slidesPerView: 3,
+      spaceBetween: 30,
+      pagination: {
+        el: ".swiper-pagination",
+        clickable: true,
+      },
+    });
+  </script>
 </body>
 </html>

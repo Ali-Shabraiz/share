@@ -24,8 +24,20 @@ function postAfterFollow(data,id){
     btn.dataset.address = followAddress(data.isFollower, data.isFollowing);
     btn.textContent = followText(data.isFollower, data.isFollowing);
    })
-   
-
+}
+function reelAfterFollow(data,id){
+   var followBtns =  document.querySelectorAll(`.reelFollowBtn${id}`);
+   followBtns.forEach(btn => {
+    btn.dataset.address = followAddress(data.isFollower, data.isFollowing);
+    if(btn.classList.contains('active')){
+        btn.classList.remove('active');
+        btn.classList.replace('fa-check','fa-plus')
+    }
+    else{
+        btn.classList.add('active');
+        btn.classList.replace('fa-plus','fa-check')
+    }
+   })
 }
 function followText(isFollowed, isFollowing) {
     if (isFollowed && isFollowing)

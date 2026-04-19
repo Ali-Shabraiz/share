@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.css" />
+ <style>
+  .swiper{
+    width: 400px;
+    height: 90vh;
+  }
+     .swiper-slide {
+      text-align: center;
+      font-size: 18px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 200px;
+      position: relative;
+      /* padding: 10px 0; */
+    }
+
+    .swiper-slide img {
+      display: block;
+      /* width: auto; */
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 20px;
+    }
+    .swiper-pagination-bullet:not(.swiper-pagination-bullet-active){
+        background: var(--wte) !important;
+        opacity: 0.8;
+    }
+ </style>
+</head>
+<body>
+  <div class="swiper">
+    <div class="swiper-wrapper" id="imagesContainer">
+      <div class="swiper-slide"><img src="./assets/image/bili.jpeg" alt=""></div>
+      <div class="swiper-slide"><img src="./assets/image/bili.jpeg" alt=""></div>
+      <div class="swiper-slide"><img src="./assets/image/bili.jpeg" alt=""></div>
+    </div>
+  </div>
+  <div class="xt">Next</div>
+    <div class="pre">Pre</div>
+     <script src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js"></script>
+  
+  <script>
+   const swiper = new Swiper('.swiper', {
+  direction: "vertical",
+  speed: 400,
+  snapToSlideEdge: true,
+  grabCursor: true,
+  slideToClickedSlide: true,
+  navigation: {
+    nextEl: ".xt",
+    prevEl: ".pre"
+  },
+  mousewheel: true
+});
+  </script>
+</body>
+</html>

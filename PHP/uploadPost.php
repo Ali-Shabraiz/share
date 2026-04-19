@@ -37,17 +37,25 @@ if(isset($_POST['data'])){
 
 
 
-if (isset($_FILES["image"])) {
+if (isset($_FILES["image"]) || isset($_FILES['video'])) {
     
-    
+    if(isset($_FILES["image"])){
 $fileTmp  = $_FILES["image"]["tmp_name"];
 $fileName = $_FILES["image"]["name"];
+$allowed = ["png","jpg","jpeg","webp","svg","gif"];
+    }
+    else if(isset($_FILES['video'])){
+        $fileTmp  = $_FILES["video"]["tmp_name"];
+        $fileName = $_FILES["video"]["name"];
+        $allowed = ['gif','mp4','webm'];
+        $folderAddressNew = '../assets/video/';
+    }
+
 
 $ext = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
 
 
 // Allowed formats
-$allowed = ["png","jpg","jpeg","webp","svg","gif"];
 
 // Validate extension
 if (!in_array($ext, $allowed)) {
@@ -55,12 +63,22 @@ if (!in_array($ext, $allowed)) {
 }
 
 // Optional: max 5MB
-if ($_FILES["image"]["size"] > 10 * 1024 * 1024) {
-    exit("File too large (max 10MB)");
+if (isset($_FILES["image"]))
+if ($_FILES["image"]["size"] > 15 * 1024 * 1024) {
+    exit("File too large (max 15MB)");
+}
+if(isset($_FILE['video']))
+ if ($_FILES["video"]["size"] > 30 * 1024 * 1024) {
+    exit("File too large (max 30MB)");
 }
 
 // Generate unique file name
+if (isset($_FILES["image"]))
 $newName = uniqid("img_", true) . "." . $ext;
+ if (isset($_FILES["video"]))
+$newName = uniqid("vid_", true) . "." . $ext;
+
+
 
 $targetFile = $folderAddressNew .'/'. $newName;
 
@@ -119,8 +137,7 @@ $text = 'https://instagram.com/'.$data ?? "";
     imagedestroy($image);
     unlink($tempPng);
 }
+// $stmt->close();
 }
-
-$stmt->close();
 $conn->close();
 ?>
