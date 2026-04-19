@@ -178,17 +178,17 @@ else{
         font-size: 1.2em;
     }
     .commentSection{
-        /* background: red; */
+        background: var(--wte);
         position: relative;
         max-height: 100%;
         height: calc(100vh - var(--navHeight));
-        padding: 5px 5px;
+        padding: 10px 10px;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
         min-width: var(--comentSectionWidth);
         gap: 10px;
-        border-left: 1px solid var(--heartRed);
+        /* border-left: 1px solid var(--heartRed); */
         
     }
     .commentSection form {
@@ -240,14 +240,7 @@ else{
         font-size: 0.8em;
         text-align: justify;
     }
-    #commentsCheck[type='checkbox'] + .commentSection{
-        display: none;
-
-    }
-
-    #commentsCheck[type='checkbox']:checked + .commentSection{
-        display: flex;
-    }
+   
     
     
     @media (max-width: 460px){
@@ -295,7 +288,6 @@ else{
                             <div class="pre fa fa-arrow-up" onclick="volumeFirst(volumeFirstCondition);"></div>
                             <div class="xt fa fa-arrow-down" onclick="volumeFirst(volumeFirstCondition);"></div>
                     </div>
-                    <input type="checkbox"  id="commentsCheck"  class="displayNone">
                     <div class="commentSection">
                         <h3>Comments</h3>
                     <div class="allComments" id="commentBox">
@@ -423,10 +415,18 @@ else{
         function displayCommitsBox(id){
             isCommentsSectionDisplayed = !isCommentsSectionDisplayed;
             fetch_comments(id,isCommentsSectionDisplayed);
-            if(isCommentsSectionDisplayed)
+            placeNextPreButtons(isCommentsSectionDisplayed);
+        }
+        function placeNextPreButtons(condition){
+            if(condition){
                 document.querySelector('.preNextIcons').style.right = 'var(--comentSectionWidth)';
-            else
+                document.querySelector('.commentSection').style.display = 'flex';
+
+            }
+            else{
                 document.querySelector('.preNextIcons').style.right = '20px';
+                document.querySelector('.commentSection').style.display = 'none';
+            }
         }
         function addComment(id){
             $.ajax({
@@ -439,6 +439,7 @@ else{
             })
         }
         let isCommentsSectionDisplayed = 0;
+        placeNextPreButtons(isCommentsSectionDisplayed);
         function fetch_comments(id,condition){
             console.log(id);
             if(condition){
@@ -631,7 +632,7 @@ qrCode.append(document.getElementById(`qrcode${data.postID}`));
                 <div class="navigation">
                     <div class="icon"><img src="../assets/image/${reelD.img}"><span class="reelFollowBtn${reelD.uID} followIcon ${reelD.isFollowing ? 'active' : ''} fa ${reelD.isFollowing ? 'fa-check' : 'fa-plus'}"  data-address="${followAddress(reelD.isFollowed,reelD.isFollowing)}" onclick="followHim('<?php echo $folderLoc?>','${reelD.uID}',this.dataset.address,'reelAfterFollow')"></span></div>
                     <div class="icon" onclick="likeIt('${reelD.ID}')"><span id="likeBtn${reelD.ID}" class="${reelD.likebyMe ? 'fa' : 'far'} fa-heart" style="color: var(${(reelD.likebyMe) ? '--heartRed': '--blk'})"></span><span id="likeCount${reelD.ID}">${reelD.likes}</span></div>
-                    <label for="commentsCheck" onclick="displayCommitsBox('${reelD.ID}')" class="icon"><span class="far fa-comment"></span><span>1,000</span></label>
+                    <div for="commentsCheck" onclick="displayCommitsBox('${reelD.ID}')" class="icon"><span class="far fa-comment"></span><span>1,000</span></div>
                     <div class="icon"><span class="fa fa-share"></span><span>1,000</span></div>
                 </div>
                 </div>
