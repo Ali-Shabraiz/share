@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+    integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body{
+            padding: 10px;
+        }
+        .mobileCover{
+            border: 5px solid black;
+            width: 300px;
+            aspect-ratio: 1 / 2;
+            border-radius: 20px;
+            position: relative;
+            /* padding: 10px; */
+        }
+        .mobileCover .mobileBtn{
+            position: absolute;
+            top: 20%;
+            right: -8px;
+            width: 5px;
+            background-color: black;
+        }
+        .mobileCover .mobileBtn.powerBtn{
+            height: 30px;
+            top: 35%;
+        }
+        .mobileCover .mobileBtn.volumeBtn{
+            height: 60px;
+            top: 20%;
+        }
+        .mobileCover .topBar{
+            display: flex;
+            height: 20px;
+            padding: 3px 8px;
+            align-items: center;
+            /* background-color: red; */
+            justify-content: space-between;
+            width: 100%;
+            position: relative;
+        }
+      
+        .mobileCover .topBar img{
+            height: 100%;
+            position: absolute;
+            padding: 2px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .mobileCover .topBar span{
+            font-size: 0.8em; 
+            gap: 2px;
+            display: flex;
+        }
+        .mobileCover .personalInfo{
+            width: 100%;
+            position: relative;
+            height: auto;
+            padding: 0 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .mobileCover .personalInfo img.cover{
+            width: 100%;
+            margin-top: 10px;
+            border-radius: 30px;
+
+        }
+        .mobileCover .personalInfo img.userImg{
+            width: 80px;
+            outline: 8px solid white;
+            border-radius: 50%;
+            margin-top: -45px;
+        }
+        .mobileCover .personalInfo p{
+            text-align: justify;
+            font-size: 0.7em;
+        }
+        .mobileCover .scoresInfo{
+            width: 100%;
+            height: auto;
+            display: flex;
+            justify-content: space-between;
+            gap: 5px;
+            flex-wrap: wrap;
+            padding: 0 10px;
+        }
+        .mobileCover .scoresInfo span{
+            width: 75px;
+            height: 20px;
+            border: 2px solid black;
+        }
+
+    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="mobileCover">
+        <span class="mobileBtn powerBtn"></span>
+        <span class="mobileBtn volumeBtn"></span>
+        <div class="topBar">
+            <span id="time"></span>
+            <img src="./lens.png" alt="" >
+            <span><span class="fa fa-battery" id="batteryIcon"></span><span id="battery"></span></span>
+        </div>
+        <div class="personalInfo">
+            <img src="./assets//image/img_69cf46b74df0a3.35643666.jpg" alt="" class="cover">
+            <img src="./assets//image/img_69cf46b74df0a3.35643666.jpg" alt="" class="userImg">
+            <h3>Syed Ali Khameinei</h3>
+            <span class="grayText">khaemeinei@gmail.com</span>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deleniti dolores amet, sint, possimus temporibus tempora cum iure non enim architecto quos id alias magnam praesentium reprehenderit reiciendis delectus voluptate optio.</p>
+            <div class="buttons">
+                <button>Follow</button>
+                <button>Message</button>
+            </div>            
+        </div>
+        <div class="scoresInfo">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <form class="email">
+                <input type="text" placeholder="Enter Email">
+                <button>Send</button>
+            </form>
+    </div>
+    <script>
+navigator.getBattery().then(function(battery) {
+    function updateBattery() {
+        document.getElementById("battery").innerText =
+              (battery.level * 100) + "%";
+              if(battery.charging)
+                document.getElementById('batteryIcon').classList.replace('fa-battery','fa-bolt')
+                else 
+                document.getElementById('batteryIcon').classList.replace('fa-bolt','fa-battery')
+
+    }
+
+    updateBattery();
+
+    battery.addEventListener("levelchange", updateBattery);
+});
+
+function updateTime() {
+    const now = new Date();
+    let hours = now.getHours().toString().padStart(2, '0');
+    let minutes = now.getMinutes().toString().padStart(2, '0');
+
+    document.getElementById("time").innerText = `${hours}:${minutes}`;
+}
+
+updateTime();
+setInterval(updateTime, 1000*30);
+</script>
+</body>
+</html>

@@ -134,9 +134,6 @@ function shareProfile(id,name) {
 
                     document.getElementById(`likeNumber${postID}`).textContent = data.likes;
                     document.getElementById(`scoresNumber${postID}`).textContent = Number(document.getElementById(`scoresNumber${postID}`).innerText) + data.scores;
-
-                    
-                    
                 })
             })
         }

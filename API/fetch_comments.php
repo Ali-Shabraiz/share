@@ -27,7 +27,7 @@ if(isset($_COOKIE['userID'])){
         $row['comment'] = $item['comment'];
         $rows['code'] = 200;
         $comments[] = $row;
-
+        $stmt->close();
 } 
     $rows['message'] = $comments;
     } else {

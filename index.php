@@ -13,6 +13,13 @@ if(!isset($reelPage)){
 else{
     $mainBtnFunction = "showSignUpLogInForm('./')";
 }
+if(isset($_GET['sharedPost'])){
+    $sharedPostC = true;
+    $sharedPost = $_GET['sharedPost'];
+}
+else    
+    $sharedPostC = false;
+
 
 ?>
 
@@ -59,6 +66,7 @@ else{
         display: flex;
         position: relative;
         padding: 10px;
+
     }
     .swiper-slide .data .information{
         z-index: 1;
@@ -66,6 +74,7 @@ else{
         bottom: 20px;
         color: var(--wte);
         left: 20px;
+        width: calc(90% - 50px);
     }
     .swiper-slide video {
       display: block;
@@ -144,6 +153,7 @@ else{
         display: flex;
         flex-direction: column;
         align-items: center;
+        justify-content: center;
         /* gap: 5px; */
         position: relative;
         width: 50px;
@@ -202,6 +212,11 @@ else{
         
         
     }
+    .commentSection .crossIcon{
+        position: absolute;
+        right: 10px;
+        top: 10px;
+    }
     .commentSection form button,
     .commentSection form input{
         padding: 10px 10px;
@@ -241,13 +256,63 @@ else{
         text-align: justify;
     }
    
+    @media (max-width: 850px){
+     
     
+    .singleReel .navigation{
+        position: absolute;
+        right: 5px;
+        bottom: 0;
+    }
+    .singleReel .navigation .icon{
+        color: var(--wte);
+        --blk: var(--wte);
+        text-shadow: 0 0 5px var(--grayText);
+        
+    }
+    }
+    @media (max-width: 760px){
+        .preNextIcons{
+            display: none;
+        }
+        .commentSection{
+            position: fixed;
+            z-index: 11;
+        }
+
+        
+    }
     
     @media (max-width: 460px){
         .swiper{
         width: 100%;
     }
     
+    }
+
+    .videoVolumeBtn{
+        position: absolute;
+        width: 30px;
+        height: 30px;
+        align-content: center;
+        text-align: center;
+        bottom: 10px;
+        background: var(--wte);
+        color: var(--blk);
+        border-radius: 10px;
+        right: 10px;
+    }
+    .playPauseIcon{
+        position: absolute;
+        font-size: 2em;
+        color: var(--wte);
+        opacity: 0.6;
+        transition: 0.3s;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+    .playPauseIcon.fa-pause{
+        opacity: 0;
     }
 </style>
     <title>Home - Share</title>
@@ -266,7 +331,7 @@ else{
                         <div class="swiper">
                             <div class="controls">
         <span class="playPauseBtn fa fa-pause" onclick="playPauseVideo(paused,this)"></span>
-        <span class="volumeBtn fa fa-volume-xmark" onclick="videoVolume(volume,this)"></span>
+        <span class="volumeBtn fa fa-volume-xmark" onclick="videoVolume(volume,document.querySelectorAll('.volumeBtn'))"></span>
         </div>
     <div class="swiper-wrapper" id="reelsContainer">
         
@@ -288,18 +353,23 @@ else{
                             <div class="pre fa fa-arrow-up" onclick="volumeFirst(volumeFirstCondition);"></div>
                             <div class="xt fa fa-arrow-down" onclick="volumeFirst(volumeFirstCondition);"></div>
                     </div>
-                    <div class="commentSection">
+                    
+                <?php }?>
+                <div class="commentSection" style="<?php echo (!$reelPage) ? 'position: fixed;display: none;' : '';?>">
+                        <span class="fa fa-times crossIcon" onclick="displayCommitsBox('dummy_id')"></span>
                         <h3>Comments</h3>
                     <div class="allComments" id="commentBox">
                         
                     </div>
-                <form onsubmit="addComment(this.dataset.postid)" id="commentForm">
-                    <input type="hidden" id="commentFormHidden" name="on">
+                    <?php if($reelPage){?> 
+                    <form onsubmit="addComment(this.dataset.postid)" id="commentForm">
+                    <input type="hidden" id="commentFormHidden" value="${post.ID}" name="on">
                     <input type="text" placeholder="Enter Your Comment" required name="comment">
                     <button type="submit">Send</button>
                 </form>
-                </div>
                 <?php }?>
+                </div>
+                
             </div>
          </div>
     </div>
@@ -390,8 +460,6 @@ else{
             fetch(`<?php echo $folderLoc?>API/fetch_post.php${firstReq}`).then(res => {
                 return res.json()
             }).then(data => {
-                console.log(data)
-
                 display<?php echo $pageType?>(data,!scrolled<?php echo ($reelPage) ? ",initialSlideNum": "";?>);
                 allowToRequestPosts = 1;
             })
@@ -403,20 +471,41 @@ else{
                 method: 'POST',
                 data: {postID: postID},
                 success: (data => {
-                    if(data.condition)
-                        document.getElementById(`likeBtn${postID}`).classList.replace('far','fa');
-                    else
-                        document.getElementById(`likeBtn${postID}`).classList.replace('fa','far');
-                    document.getElementById(`likeCount${postID}`).textContent = ' '+data.likes;
-                    document.getElementById(`likeBtn${postID}`).style.color = `var(${data.color})`;
+                    let likeBtn = document.querySelectorAll(`.likeBtn${postID}`);
+                    let likeCount = document.querySelectorAll(`.likeCount${postID}`);
+                    likeBtn.forEach(btn => {
+                      btn.style.color = `var(${data.color})`;
+                        })
+                    likeCount.forEach(btn => {
+                            btn.textContent = ' '+data.likes;
+                        })
+                    if(data.condition){
+                        likeBtn.forEach(btn => {
+                            btn.classList.replace('far','fa');
+                        })
+                          
+                }
+                    else{
+                        likeBtn.forEach(btn => {
+                            btn.classList.replace('fa','far');
+                        })
+}
                 })
             })
         }
         function displayCommitsBox(id){
             isCommentsSectionDisplayed = !isCommentsSectionDisplayed;
             fetch_comments(id,isCommentsSectionDisplayed);
+            <?php if($reelPage){?>
             placeNextPreButtons(isCommentsSectionDisplayed);
+            <?php } else { ?>
+            if(isCommentsSectionDisplayed)
+                document.querySelector('.commentSection').style.display = 'flex';
+            else
+                document.querySelector('.commentSection').style.display = 'none';
+            <?php }?>
         }
+        <?php if($reelPage){?> 
         function placeNextPreButtons(condition){
             if(condition){
                 document.querySelector('.preNextIcons').style.right = 'var(--comentSectionWidth)';
@@ -428,27 +517,48 @@ else{
                 document.querySelector('.commentSection').style.display = 'none';
             }
         }
+        <?php  } ?>
         function addComment(id){
             $.ajax({
                 url: '<?php echo $folderLoc?>PHP/addComit.php',
                 method: 'POST',
-                data: $(`#commentForm`).serialize(),
+                data: $(`#commentForm<?php echo (!$reelPage) ? '${id}' : ''?>`).serialize(),
                 success: (data => {
-                    console.log(data);
+                    displayAddComent(data);
+                     let commentsCount = document.querySelectorAll(`.commentCount${id}`);
+                    commentsCount.forEach(counter => {
+                        counter.innerText = data.comments;
+                    })
                 })
             })
         }
         let isCommentsSectionDisplayed = 0;
+        <?php if($reelPage){?>
         placeNextPreButtons(isCommentsSectionDisplayed);
-        function fetch_comments(id,condition){
-            console.log(id);
+       
+        <?php } ?>
+
+        function displayAddComent(data){
+            var container = document.getElementById(`commentBox`);
+            let commentDiv = document.createElement('div');
+            commentDiv.classList.add('singleComment');
+                        commentDiv.innerHTML = `
+                            <div class="commentedBy">
+                                <img src="<?php echo $folderLoc;?>assets/image/${data.img}">
+                                <h5 class="grayText">${data.commentBy}</h5>
+                            </div>
+                            <p>${data.comment}</p>`
+                           container.insertBefore(commentDiv,container.firstChild); 
+        }
+         function fetch_comments(id,condition){
             if(condition){
                 $.ajax({
                 url: '<?php echo $folderLoc?>API/fetch_comments.php',
                 method: 'POST',
                 data: {postID:id},
                 success: (data => {
-                    displayComments(data,id)
+                    displayComments(data,id);
+                   
                 })
             })
             }
@@ -462,7 +572,7 @@ else{
             commentDiv.classList.add('singleComment');
                         commentDiv.innerHTML = `
                             <div class="commentedBy">
-                                <img src="../assets/image/${comit.img}">
+                                <img src="<?php echo $folderLoc?>assets/image/${comit.img}">
                                 <h5 class="grayText">${comit.commentBy}</h5>
                             </div>
                             <p>${comit.comment}</p>`
@@ -473,7 +583,7 @@ else{
             }
 
         }
-        fetch_post(0,'?firstReq=1<?Php echo ($likedPage) ? "&likePage=1":"";echo ($reelPage)? "&reelPage=1": ""?>');
+        fetch_post(0,'?firstReq=1<?php echo $sharedPostC ? '&sharedPost='.$sharedPost: '';?><?Php echo ($likedPage) ? "&likePage=1":"";echo ($reelPage)? "&reelPage=1": ""?>');
         <?php if(!$reelPage){?>
         function displayPosts(data,scrolled){
             let postContainer = document.getElementById('postContainer');
@@ -497,18 +607,27 @@ else{
                         <div class="postData" id="postData${post.postID}"></div>
                         <div class="details">
                             <section>
-                                <span onclick="likeIt('${post.ID}')"><i id="likeBtn${post.ID}" class="${post.likebyMe ? 'fa' : 'far'} fa-heart" style="color: var(${(post.likebyMe) ? '--heartRed': '--blk'})"></i><span id="likeCount${post.ID}"> ${post.likes}</span></span>
-                                <span><i class="far fa-comment"></i> 0</span>
+                                <span onclick="likeIt('${post.ID}')"><i class="likeBtn${post.ID} ${post.likebyMe ? 'fa' : 'far'} fa-heart" style="color: var(${(post.likebyMe) ? '--heartRed': '--blk'})"></i><span class="likeCount${post.ID}"> ${post.likes}</span></span>
+                                <span onclick="displayCommitsBox('${post.ID}')"><i class="far fa-comment"></i> <span class="commentCount${post.ID}">${post.comments}</span></span>
                             </section>
                             <section>
                                 <p>${post.message}</p>
                             </section>
+                            <form onsubmit="addComment('${post.ID}');displayCommitsBox('${post.ID}');" id="commentForm${post.ID}">
+                    <input type="hidden" id="commentFormHidden" value="${post.ID}" name="on">
+                    <input type="text" placeholder="Enter Your Comment" required name="comment">
+                    <button type="submit">Send</button>
+                </form>
                         </div>
                         
                 `;
                 postContainer.append(singlePost);
                 displaySwitch(post,post.type);
             })
+            deActiveForms();
+            <?php if(!$reelPage){?>
+                observerPlayPause();
+                <?php }?>
         }
        
         
@@ -552,7 +671,9 @@ qrCode.append(document.getElementById(`qrcode${data.postID}`));
         }
         function displayVideo(data){
              document.getElementById(`postData${data.postID}`).innerHTML = `
-                <video src="<?php echo $folderLoc?>assets/video/${data.data}" controls muted loop autoplay></video>
+                <video data-postid="${data.postID}" onclick="playPauseVideo(this,paused,document.querySelector('.playPauseIcon'))" src="<?php echo $folderLoc?>assets/video/${data.data}" ${volume ? '' : 'muted'} loop></video>
+                <span class="fa fa-pause playPauseIcon"></span>
+                <span class="fa ${volume ? 'fa-volume-high' : 'fa-volume-xmark'} videoVolumeBtn" onclick="videoVolume(volume,document.querySelectorAll('.videoVolumeBtn'))"></span>
              `
         }
         function displayImage(data){
@@ -579,7 +700,6 @@ qrCode.append(document.getElementById(`qrcode${data.postID}`));
                     <blockquote class="tiktok-embed" cite="https://tiktok.com/@${data.data}" data-unique-id="${data.data}" data-embed-type="creator"> <section> <a target="_blank" href="https://www.tiktok.com/@${data.data}?refer=creator_embed">${data.dataName}</a> </section> </blockquote>
                     </div>
                     `
-                   
         }
         function displayFBCard(data){
             document.getElementById(`postData${data.postID}`).innerHTML = ` <div class="FBCard postCard" style="--clr: #1877F2">
@@ -597,7 +717,7 @@ qrCode.append(document.getElementById(`qrcode${data.postID}`));
             document.getElementById(`postData${data.postID}`).innerHTML = `<div class="insta-card postCard">
              <i onclick="shareProfile('https://instagram.com/${data.data}','${data.dataName}')" class="fa fa-share"></i>
                         <h3>${data.dataName}</h3>
-                        <div class="qrcode" style="--bg: url('<?php echo $folderLoc?>assets/qrImg/qr_${data.ID}.jpg');">
+                        <div class="qrcode" style="background: url('<?php echo $folderLoc?>assets/qrImg/qr_${data.ID}.jpg'), radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);background-size: cover;">
                             <a class="number" href="https://instagram.com/${data.data}" style="background: 
                             radial-gradient(circle at 30% 107%,
                              #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
@@ -622,25 +742,27 @@ qrCode.append(document.getElementById(`qrcode${data.postID}`));
                 reel.classList.add('singleReel');
                 reel.innerHTML = `
                 <div class="data">
-                <video data-postid="${reelD.ID}" src="../assets/video/${reelD.data}" ${firstReel == 1 ? 'autoplay muted': ''} loop></video>
+                <video data-postid="${reelD.ID}" src="../assets/video/${reelD.data}" ${firstReel == 1 ? 'autoplay muted': ''} ${(volume) ? '' : 'muted'} loop></video>
                 <div class="information">
                 <h4>${reelD.dataName}</h4>
                 <p>${reelD.message}</p>
                 </div>
                 <div class="navigation">
                     <div class="icon"><img src="../assets/image/${reelD.img}"><span class="reelFollowBtn${reelD.uID} followIcon ${reelD.isFollowing ? 'active' : ''} fa ${reelD.isFollowing ? 'fa-check' : 'fa-plus'}"  data-address="${followAddress(reelD.isFollowed,reelD.isFollowing)}" onclick="followHim('<?php echo $folderLoc?>','${reelD.uID}',this.dataset.address,'reelAfterFollow')"></span></div>
-                    <div class="icon" onclick="likeIt('${reelD.ID}')"><span id="likeBtn${reelD.ID}" class="${reelD.likebyMe ? 'fa' : 'far'} fa-heart" style="color: var(${(reelD.likebyMe) ? '--heartRed': '--blk'})"></span><span id="likeCount${reelD.ID}">${reelD.likes}</span></div>
-                    <div for="commentsCheck" onclick="displayCommitsBox('${reelD.ID}')" class="icon"><span class="far fa-comment"></span><span>1,000</span></div>
-                    <div class="icon"><span class="fa fa-share"></span><span>1,000</span></div>
+                    <div class="icon" onclick="likeIt('${reelD.ID}')"><span id="likeBtn${reelD.ID}" class="likeBtn${reelD.ID} ${reelD.likebyMe ? 'fa' : 'far'} fa-heart" style="color: var(${(reelD.likebyMe) ? '--heartRed': '--blk'})"></span><span class="likeCount${reelD.ID}">${reelD.likes}</span></div>
+                    <div for="commentsCheck" onclick="displayCommitsBox('${reelD.ID}')" class="icon"><span class="far fa-comment"></span><span class="commentCount${reelD.ID}">${reelD.comments}</span></div>
+                    <div class="icon"><span class="fa fa-share"></span></div>
                 </div>
                 </div>
-                
-                
                 <div class="spacer" width: 220px;></div>
                 
 
                 `;
                 container.append(reel);
+                if(firstReel == 1){
+                    document.getElementById('commentForm').dataset.postid = reelD.ID;
+                    document.getElementById('commentFormHidden').value = reelD.ID;
+                }
                (firstReel == 1) ? fetch_comments(reelD.ID,isCommentsSectionDisplayed) :  2 + 2;
                 firstReel++;
             })
@@ -658,16 +780,19 @@ qrCode.append(document.getElementById(`qrcode${data.postID}`));
   const documentHeight = document.documentElement.scrollHeight;
   const scrolledPercentage = (scrollTop + windowHeight) / documentHeight;
   if (scrolledPercentage >= 0.99) {
-    if(allowToRequestPosts)
+    if(allowToRequestPosts){
         fetch_post(1,'');
+}
   }
 });
   <?php }?>
     </script>
      <script src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js"></script>
   <script>
-    function playPauseVideo(condition,icon){
+    function playPauseVideo(<?php echo !$reelPage ? 'activeVideo,' : ''?>condition,icon){
+        <?php if($reelPage){?>
         const activeVideo = document.querySelector('.swiper-slide-active video');
+        <?php } ?>
         if(!condition){
             activeVideo.pause();
             paused = true;
@@ -682,21 +807,20 @@ qrCode.append(document.getElementById(`qrcode${data.postID}`));
     }
     var volume = false;
     var paused = false;
-    function videoVolume(condition,icon){
-        // console.log(condition)
+    function videoVolume(condition,icons){
         if(condition){
-        document.querySelectorAll('.swiper-slide video').forEach(video => {
+            volume = false;
+        document.querySelectorAll('<?php echo ($reelPage) ? ".swiper-slide" : ".content .info .postContainer .postData"?> video').forEach(video => {
                 video.muted = true;
-                volume = false;
-                icon.classList.replace('fa-volume-high','fa-volume-xmark');
-                
+                icons.forEach(icon => icon.classList.replace('fa-volume-high','fa-volume-xmark')); 
             });
             }
          else{
-        document.querySelectorAll('.swiper-slide video').forEach(video => {
+             volume = true;
+        document.querySelectorAll('<?php echo ($reelPage) ? ".swiper-slide" : ".content .info .postContainer .postData"?> video').forEach(video => {
             video.muted = false;
-            volume = true;
-            icon.classList.replace('fa-volume-xmark','fa-volume-high');
+            icons.forEach(icon => icon.classList.replace('fa-volume-xmark','fa-volume-high')); 
+
             });
 
     }
@@ -744,8 +868,8 @@ qrCode.append(document.getElementById(`qrcode${data.postID}`));
             // Get active slide video
             const activeVideo = document.querySelector('.swiper-slide-active video');
             if (activeVideo) {
-                document.getElementById('commentForm').dataset.postid = activeVideo.dataset.postid;
                 document.getElementById('commentFormHidden').value = activeVideo.dataset.postid;
+                document.getElementById('commentForm').dataset.postid = activeVideo.dataset.postid;
                 fetch_comments(activeVideo.dataset.postid,isCommentsSectionDisplayed);
                 activeVideo.play();
                 paused = false;
@@ -757,6 +881,35 @@ qrCode.append(document.getElementById(`qrcode${data.postID}`));
 
   // Optional: first user interaction unlocks sound
 }
+  </script>
+  <script>
+   function observerPlayPause() {
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+
+      const video = entry.target;
+
+      if (entry.isIntersecting) {
+         document.querySelector(`#postData${video.dataset.postid} .playPauseIcon`).classList.replace('fa-play','fa-pause')
+        video.play().catch(() => {});
+      } else {
+        video.pause();
+         document.querySelector(`#postData${video.dataset.postid} .playPauseIcon`).classList.replace('fa-pause','fa-play')
+      }
+    });
+  }, {
+    threshold: 0.6
+  });
+
+  document.querySelectorAll("video").forEach(video => {
+    observer.observe(video);
+  });
+
+}
+
+            deActiveForms();
+
   </script>
   
 </body>

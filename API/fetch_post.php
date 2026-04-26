@@ -56,6 +56,69 @@ if(isset($_COOKIE['userID'])){
 
     }
         $rows = [];
+        if(isset($_GET['sharedPost'])){
+            $sharedPostId = $_GET['sharedPost'];
+            $sharedResult = $conn->query("SELECT ID, type, uploadedBy,likes FROM posts WHERE  ID = '$sharedPostId' LIMIT 1");
+            $sharedRow = $sharedResult->fetch_assoc();
+            if($sharedResult->num_rows){
+            $uploadedBy = $sharedRow['uploadedBy'];
+            $tableName = 'post_'.$uploadedBy;
+            $resultShared1 = $conn->query("SELECT data,name,message,date FROM `$tableName`  WHERE ID = '$sharedPostId'  LIMIT 1");
+            $sharedRow1 = $resultShared1->fetch_assoc();
+            $resultShared2 = $conn->query("SELECT name,img FROM `user`  WHERE ID = '$uploadedBy' LIMIT 1");
+            $sharedRow2 = $resultShared2->fetch_assoc();
+            $sharedRow['data'] = $sharedRow1['data'];
+            $sharedRow['dataName'] = $sharedRow1['name'];
+            $sharedRow['message'] = $sharedRow1['message'];
+            $sharedRow['name'] = $sharedRow2['name'];
+            $sharedRow['img'] = $sharedRow2['img'];
+            $sharedRow['uID'] = $uploadedBy;
+            $sharedRow['date'] = date("d M Y", strtotime($sharedRow1['date']));
+                    $followTable = 'follow_'.$userID;
+
+        $sql = "SELECT follower,following FROM `$followTable` WHERE fID = ? LIMIT 1";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("s", $uploadedBy);
+        $stmt->execute();
+        $result3 = $stmt->get_result();
+        $row3 = $result3->fetch_assoc();
+        if($result3->num_rows){
+            $sharedRow['isFollowed'] = $row3['follower'];
+        $sharedRow['isFollowing'] = $row3['following'];
+        if($sharedRow['isFollowed'] && $row['isFollowing'])
+            $sharedRow['isfriend'] = 1;
+        else
+            $sharedRow['isFriend'] = 0;
+        } else {
+        $sharedRow['isFollowed'] = 0;
+        $sharedRow['isFollowing'] = 0;
+        $sharedRow['isFriend'] = 0;
+    }
+
+       $likeTable = 'like_'.$userID;
+
+        $sql = "SELECT isMe FROM `$likeTable` WHERE liked = ? AND isME = 1 LIMIT 1";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("s", $sharedPostId);
+        $stmt->execute();
+        $result2 = $stmt->get_result();
+        $row3 = $result2->fetch_assoc();
+        if($result2->num_rows > 0)
+            $sharedRow['likebyMe'] = $row3['isMe'];
+        else
+            $sharedRow['likebyMe'] = 0;
+
+        $fileAddress  = '../assets/json/'.$sharedPostId.'.json';
+        if(file_exists($fileAddress)){
+        $json = file_get_contents($fileAddress);
+        $commentsObject = json_decode($json, true);
+        $sharedRow['comments'] = count($commentsObject);
+    } else 
+        $sharedRow['comments'] = 0;
+        $rows[] = $sharedRow;
+            }
+
+        }
     while($row = $result->fetch_assoc()) {
        
         $postID = $row['ID'];
@@ -119,6 +182,15 @@ if(isset($_COOKIE['userID'])){
             $row['likebyMe'] = $row3['isMe'];
         else
             $row['likebyMe'] = 0;
+
+        $fileAddress  = '../assets/json/'.$postID.'.json';
+        if(file_exists($fileAddress)){
+        $json = file_get_contents($fileAddress);
+        $commentsObject = json_decode($json, true);
+        $row['comments'] = count($commentsObject);
+    } else 
+        $row['comments'] = 0;
+
         
         $rows[] = $row;
     }
