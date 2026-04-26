@@ -346,10 +346,16 @@ function followAddress($isFollowed, $isFollowing) {
             
             font-weight: 600;
         }
-        .FBPosts{
+        .instaPosts{
             display: flex;
             width: 100%;
             justify-content: space-between;
+        }
+        .instaPosts button{
+            background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+            border-radius: 10px;
+            border: none;
+            color: var(--wte);
         }
         
         
@@ -678,6 +684,7 @@ else
                     displayVideos(data.filter(data => data.type == 6));
                     displayWA(data.filter(data => data.type == 1));
                     displayTT(data.filter(data => data.type == 3));
+                    displayInsta(data.filter(data => data.type == 4));
                 })
             })
         }
@@ -728,11 +735,11 @@ else
             })
         }
 
-        function displayFB(data){
-            var reelContainer = document.querySelector('.FBPosts');
+        function displayInsta(data){
+            var reelContainer = document.querySelector('.instaPosts');
             data.forEach(d => {
                     var card = document.createElement('div');
-                    card.classList.add('FBCard');
+                    card.classList.add('instaCard');
                     card.innerHTML = `
                     <h4>${d.name}</h4><buttton>View Profile</button>
                     `
